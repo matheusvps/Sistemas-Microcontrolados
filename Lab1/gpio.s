@@ -108,7 +108,6 @@ NVIC_PRI12_R		  		EQU 0xE000E430
         EXPORT GPIO_Init            ; Permite chamar GPIO_Init de outro arquivo
         EXPORT PortA_Output			; Permite chamar PortA_Output de outro arquivo
         EXPORT PortB_Output			; Permite chamar PortB_Output de outro arquivo
-        EXPORT PortJ_Input          ; Permite chamar PortJ_Input de outro arquivo
         EXPORT PortK_Output			; Permite chamar PortK_Output de outro arquivo
 		EXPORT PortM_Output			; Permite chamar PortM_Output de outro arquivo
 		EXPORT PortQ_Output         ; Permite chamar PortQ_Output de outro arquivo
@@ -122,6 +121,7 @@ GPIO_Init
 ; 1. Ativar o clock para a porta setando o bit correspondente no registrador RCGCGPIO,
 ; ap�s isso verificar no PRGPIO se a porta est� pronta para uso.
 ; enable clock to GPIOF at clock gating register
+            PUSH    {R0, R1, R2, LR}		        ; Salva os registradores que serão usados na pilha
             LDR     R0, =SYSCTL_RCGCGPIO_R  		;Carrega o endere�o do registrador RCGCGPIO
 			MOV		R1, #GPIO_PORTA                 ; Ativa o clock para a porta A
             ORR     R1, #GPIO_PORTB                 ; Ativa o clock para a porta B
@@ -241,7 +241,7 @@ EsperaGPIO  LDR     R1, [R0]						;L� da mem�ria o conte�do do endere�o 
             MOV     R1, #0x07                       ; Habilita PM2–PM0 como digitais
             STR     R1, [R0]                        ; Escreve no registrador DEN
 
-            LDR     R0, =GPIO_PORTQ_DEN_R       ; Endereço do DEN para a porta Q
+            LDR     R0, =GPIO_PORTQ_DEN_R           ; Endereço do DEN para a porta Q
             MOV     R1, #0x0F                       ; Habilita PQ3:PQ0 como digital
             STR     R1, [R0]                        ; Escreve no registrador DEN
 			
@@ -250,6 +250,7 @@ EsperaGPIO  LDR     R1, [R0]						;L� da mem�ria o conte�do do endere�o 
             MOV     R1, #0x03                       ; Habilita resistores de pull-up para PJ0 e PJ1
             STR     R1, [R0]                        ; Escreve no registrador PUR
 
+            POP     {R0, R1, R2, LR}                ; Restaura os registradores usados da pilha
 			BX      LR                              ; Retorna da função
 
 ; -------------------------------------------------------------------------------
@@ -257,11 +258,13 @@ EsperaGPIO  LDR     R1, [R0]						;L� da mem�ria o conte�do do endere�o 
 ; Parâmetro de entrada: R0 --> Valor a ser escrito nos pinos PA7:PA4
 ; Parâmetro de saída: Nenhum
 PortA_Output
+    PUSH    {R1-R6, LR}
     LDR     R1, =GPIO_PORTA_AHB_DATA_R  ; Carrega o endereço do registrador de dados da porta A
     LDR     R2, [R1]                    ; Lê o valor atual do registrador de dados
     BIC     R2, R2, #0xF0               ; Limpa os bits PA7:PA4 (0b11110000)
     ORR     R2, R2, R0                  ; Define os bits PA7:PA4 com o valor de R0
     STR     R2, [R1]                    ; Escreve o valor atualizado no registrador de dados
+    POP		{R1-R6, LR}
     BX      LR                          ; Retorna da função
 
 ; -------------------------------------------------------------------------------
@@ -269,48 +272,41 @@ PortA_Output
 ; Parâmetro de entrada: R0 --> Valor a ser escrito nos pinos PB5:PB4
 ; Parâmetro de saída: Nenhum
 PortB_Output
+    PUSH	{R1, R2, LR}
     LDR     R1, =GPIO_PORTB_AHB_DATA_R  ; Carrega o endereço do registrador de dados da porta B
     LDR     R2, [R1]                    ; Lê o valor atual do registrador de dados
     BIC     R2, R2, #0x30               ; Limpa os bits PB5:PB4 (0b00110000)
     ORR     R2, R2, R0                  ; Define os bits PB5:PB4 com o valor de R0
     STR     R2, [R1]                    ; Escreve o valor atualizado no registrador de dados
+    POP		{R1, R2, LR}
     BX      LR                          ; Retorna da função
 
 ; -------------------------------------------------------------------------------
-; Funçãoo PortJ_Input
-; Parâmetro de entrada: Nenhum
-; Parâmetro de saída: R0 --> Valor lido dos pinos PJ0
-PortJ_Input
-	LDR	R1, =GPIO_PORTJ_AHB_DATA_R		;Carrega o valor do offset do data register
-	LDR R0, [R1]                        ;Lê no barramento de dados dos pinos [J0]
-	BX LR								;Retorno
-
-; -------------------------------------------------------------------------------
 ; Função PortK_Output
-; Parâmetro de entrada: R2 --> Valor a ser escrito nos pinos PQ3:PQ0
+; Parâmetro de entrada: R0 --> Valor a ser escrito nos pinos PQ3:PQ0
 ; Parâmetro de saída: Nenhum
 PortK_Output
-	PUSH 	{LR}
-    LDR     R3, =GPIO_PORTK_DATA_R      ; Carrega o endereço do registrador de dados da porta K
-    ;LDR     R4, [R3]                    ; Lê o valor atual do registrador de dados
-    MOV		R4, #0xFF               ; Limpa os bits PK7:PK0 (0b11111111)
-    ORR     R4, R4, R2                  ; Define os bits PK7:PK0 com o valor de R0
-    STR     R4, [R3]                    ; Escreve o valor atualizado no registrador de dados
-    POP {LR}
+	PUSH 	{R1, R2, LR}
+    LDR     R1, =GPIO_PORTK_DATA_R      ; Carrega o endereço do registrador de dados da porta K
+    LDR     R2, [R1]                    ; Lê o valor atual do registrador de dados
+    BIC     R2, R2, #0xFF               ; Limpa os bits PK7:PK0 (0b11111111)
+    ORR     R2, R2, R0                  ; Define os bits PK7:PK0 com o valor de R0
+    STR     R2, [R1]                    ; Escreve o valor atualizado no registrador de dados
+    POP     {R1, R2, LR}
 	BX      LR                          ; Retorna da função
 
 ; -------------------------------------------------------------------------------
 ; Função PortM_Output
-; Parâmetro de entrada: R2 --> Valor a ser escrito nos pinos PQ3:PQ0
+; Parâmetro de entrada: R0 --> Valor a ser escrito nos pinos PQ3:PQ0
 ; Parâmetro de saída: Nenhum
 PortM_Output
-    PUSH	{LR}
-    LDR     R3, =GPIO_PORTM_DATA_R      ; Carrega o endereço do registrador de dados da porta M
-    ;LDR     R4, [R3]                    ; Lê o valor atual do registrador de dados
-    MOV 	R4, #0xFF              ; Limpa os bits PM2:PM0 (0b00000111)
-    ORR     R4, R4, R2                  ; Define os bits PM2:PM0 com o valor de R0
-    STR     R4, [R3] ; Escreve o valor atualizado no registrador de dados
-	POP		{LR}
+    PUSH	{R1, R2, LR}
+    LDR     R1, =GPIO_PORTM_DATA_R      ; Carrega o endereço do registrador de dados da porta M
+    LDR     R2, [R1]                    ; Lê o valor atual do registrador de dados
+    BIC     R2, R2, #0x07               ; Limpa os bits PM2:PM0 (0b00000111)
+    ORR     R2, R2, R0                  ; Define os bits PM2:PM0 com o valor de R0
+    STR     R2, [R1]                    ; Escreve o valor atualizado no registrador de dados
+	POP		{R1, R2, LR}
 	BX      LR                          ; Retorna da função
 
 ; -------------------------------------------------------------------------------
@@ -318,96 +314,131 @@ PortM_Output
 ; Parâmetro de entrada: R0 --> Valor a ser escrito nos pinos PQ3:PQ0
 ; Parâmetro de saída: Nenhum
 PortQ_Output
-    LDR     R1, =GPIO_PORTQ_DATA_R  ; Carrega o endereço do registrador de dados da porta Q
+    PUSH    {R1-R6, LR}
+    LDR     R1, =GPIO_PORTQ_DATA_R      ; Carrega o endereço do registrador de dados da porta Q
     LDR     R2, [R1]                    ; Lê o valor atual do registrador de dados
     BIC     R2, R2, #0x0F               ; Limpa os bits PQ3:PQ0 (0b00001111)
     ORR     R2, R2, R0                  ; Define os bits PQ3:PQ0 com o valor de R0
     STR     R2, [R1]                    ; Escreve o valor atualizado no registrador de dados
+    POP		{R1-R6, LR}
     BX      LR                          ; Retorna da função
 
 ; -------------------------------------------------------------------------------
 ; Função GPIOPortJ_Init
 ; Configura PJ0 e PJ1 como pinos de interrupção
 GPIOPortJ_Init
+    PUSH {R0, R1, R2, R3, LR}
     ; Configura o registrador de máscara de interrupção (IM) para a porta J
-    LDR R0, =GPIO_PORTJ_AHB_IM_R       ; Carrega o endereço do registrador IM da porta J
-    MOV R1, #2_00                      ; Define o valor 0 para desabilitar todas as interrupções
-    STR R1, [R0]                       ; Escreve o valor no registrador IM
+    LDR R2, =GPIO_PORTJ_AHB_IM_R        ; Carrega o endereço do registrador IM da porta J
+    LDR R1, [R2]                        ; Lê o valor do registrador IM
+    BIC R1, R1, #0x03                   ; Limpa os bits correspondentes a J0 e J1 (0b00000011)
+    ORR R1, R1, #2_00                   ; Desabilitar todas as interrupções em J0 e J1
+    STR R1, [R2]                        ; Escreve o valor no registrador IM
 
     ; Configura o registrador de detecção de borda (IS) para a porta J
-    LDR R2, =GPIO_PORTJ_AHB_IS_R       ; Carrega o endereço do registrador IS da porta J
-    STR R1, [R2]                       ; Escreve o valor no registrador IS (0 = detecção de borda)
+    LDR R0, =GPIO_PORTJ_AHB_IS_R        ; Carrega o endereço do registrador IS da porta J
+    LDR R1, [R0]                        ; Lê o valor do registrador IS
+    BIC R1, R1, #0x03                   ; Limpa os bits correspondentes a J0 e J1 (0b00000011)
+    ORR R1, R1, #2_00                   ; Detecção de borda (0 = detecção de borda)
+    STR R1, [R0]                        ; Escreve o valor no registrador IS (0 = detecção de borda)
 
     ; Configura o registrador de detecção de borda dupla (IBE) para a porta J
-    LDR R3, =GPIO_PORTJ_AHB_IBE_R      ; Carrega o endereço do registrador IBE da porta J
-    STR R1, [R3]                       ; Escreve o valor no registrador IBE (0 = borda única)
+    LDR R0, =GPIO_PORTJ_AHB_IBE_R       ; Carrega o endereço do registrador IBE da porta J
+    LDR R1, [R0]                        ; Lê o valor do registrador IBE
+    BIC R1, R1, #0x03                   ; Limpa os bits correspondentes a J0 e J1 (0b00000011)
+    ORR R1, R1, #2_00                   ; Borda única (0 = borda única)
+    STR R1, [R0]                        ; Escreve o valor no registrador IBE (0 = borda única)
 
     ; Configura o registrador de evento de borda (IEV) para a porta J
-    LDR R4, =GPIO_PORTJ_AHB_IEV_R      ; Carrega o endereço do registrador IEV da porta J
-    MOV R5, #2_01                      ; Define o valor para detecção de borda de subida
-    LDR R5, [R4]                       ; Lê o valor do registrador IEV
+    LDR R0, =GPIO_PORTJ_AHB_IEV_R       ; Carrega o endereço do registrador IEV da porta J
+    LDR R1, [R0]                        ; Lê o valor do registrador IEV
+    BIC R1, R1, #0x03                   ; Limpa os bits correspondentes a J0 e J1 (0b00000011)
+    ORR R1, R1, #2_11                   ; Detecção de borda de subida (1 = borda de subida)
+    STR R1, [R0]                        ; Escreve o valor no registrador IEV (1 = borda de subida)
 
     ; Limpa as interrupções pendentes no registrador ICR
-    LDR R6, =GPIO_PORTJ_AHB_ICR_R      ; Carrega o endereço do registrador ICR da porta J
-    MOV R7, #2_11                      ; Define o valor para limpar todas as interrupções pendentes
-    LDR R7, [R6]                       ; Lê o valor do registrador ICR
+    LDR R0, =GPIO_PORTJ_AHB_ICR_R       ; Carrega o endereço do registrador ICR da porta J
+    LDR R1, [R0]                        ; Lê o valor do registrador ICR
+    BIC R1, R1, #0x03                   ; Limpa os bits correspondentes a J0 e J1 (0b00000011)
+    ORR R1, R1, #2_11                   ; Limpa as interrupções pendentes em J0 e J1 (1 = ACK)
+    STR R1, [R0]                        ; Escreve o valor no registrador ICR
 
     ; Habilita as interrupções no registrador IM
-    LDR R7, [R0]                       ; Lê o valor do registrador IM
+    LDR R1, [R2]                        ; Lê o valor do registrador IM
+    BIC R1, R1, #0x03                   ; Limpa os bits correspondentes a J0 e J1 (0b00000011)
+    ORR R1, R1, #2_11                   ; Habilita as interrupções em J0 e J1 (1 = habilitado)
+    STR R1, [R2]                        ; Escreve o valor no registrador IM
 
     ; Configura o registrador NVIC para habilitar a interrupção da porta J
-    LDR R8, =NVIC_EN1_R                ; Carrega o endereço do registrador NVIC_EN1
-    MOV R9, #2_1                       ; Define o bit correspondente à interrupção da porta J
-    LSL R8, #19                        ; Desloca o valor para a posição correta
-    LDR R9, [R8]                       ; Lê o valor do registrador NVIC_EN1
+    LDR R0, =NVIC_EN1_R                 ; Carrega o endereço do registrador NVIC_EN1
+    LDR R1, [R0]                        ; Lê o valor do registrador NVIC_EN1
+    MOV R2, #2_1                        ; Define o bit correspondente à interrupção da porta J
+    LSL R2, #19                         ; Desloca o valor para a posição correta
+    BIC R1, R1, R2                      ; Limpa o bit correspondente à interrupção da porta J
+    ORR R1, R1, R2                      ; Habilita a interrupção da porta J
+    STR R1, [R0]                        ; Escreve o valor no registrador NVIC_EN1
 
     ; Configura a prioridade da interrupção no registrador NVIC_PRI12
-    LDR R10, =NVIC_PRI12_R             ; Carrega o endereço do registrador NVIC_PRI12
-    MOV R11, #5                        ; Define a prioridade da interrupção
-    LSL R10, #29                       ; Desloca o valor para a posição correta
-    LDR R11, [R10]                     ; Lê o valor do registrador NVIC_PRI12
+    LDR R0, =NVIC_PRI12_R               ; Carrega o endereço do registrador NVIC_PRI12
+    LDR R1, [R0]                        ; Lê o valor do registrador NVIC_PRI12
+    MOV R3, #0x07                       ; Define o valor para a prioridade da interrupção
+    LSL R3, #29                         ; Desloca o valor para a posição correta
+    BIC R1, R1, R3                      ; Limpa os bits correspondentes à prioridade da interrupção
+    MOV R2, #5                          ; Define a prioridade da interrupção
+    LSL R2, #29                         ; Desloca o valor para a posição correta
+    ORR R1, R1, R2                      ; Habilita a prioridade da interrupção
+    STR R1, [R0]                        ; Escreve o valor no registrador NVIC_PRI12
 
     ; Retorna da função
-    BX LR                              ; Retorna para o chamador
+    POP {R0, R1, R2, R3, LR}            ; Restaura os registradores da pilha
+    BX LR                               ; Retorna para o chamador
+
+; -------------------------------------------------------------------------------
+; Função GPIOPortQ_Init
+; Configura PJ0 e PJ1 como pinos de interrupção
+GPIOPortQ_Init
+    PUSH {R0, R1, R2, R3, R4, R5, R6, R7, LR}
+    BX LR                               ; Retorna para o chamador
+
 
 ; -------------------------------------------------------------------------------
 ; Função GPIOPortJ_Handler
 ; Gerencia interrupções em PJ0 e PJ1, limpando flags
 GPIOPortJ_Handler
-    PUSH {LR}                          ; Salva o registrador LR na pilha
-    LDR R0, =GPIO_PORTJ_AHB_RIS_R      ; Carrega o endereço do registrador RIS da porta J
-    LDR R1, [R0]                       ; Lê o valor do registrador RIS
-VerificaJ0
-    CMP R1, #2_01                      ; Compara o valor com o bit correspondente a J0
-    BNE VerificaJ1                     ; Se não for igual, vai para VerificaJ1
-    LDR R0, =GPIO_PORTJ_AHB_ICR_R      ; Carrega o endereço do registrador ICR da porta J
+    PUSH {LR}                           ; Salva o registrador LR na pilha
+    LDR R0, =GPIO_PORTJ_AHB_RIS_R       ; Carrega o endereço do registrador RIS da porta J
+    LDR R1, [R0]                        ; Lê o valor do registrador RIS
+VerificaJ0  
+    CMP R1, #2_01                       ; Compara o valor com o bit correspondente a J0
+    BNE VerificaJ1                      ; Se não for igual, vai para VerificaJ1
+    LDR R0, =GPIO_PORTJ_AHB_ICR_R       ; Carrega o endereço do registrador ICR da porta J
 	ADD R5, R5, #1
 	CMP R5, #10
 	IT GE
     SUBGE R5, R5, #9
-    MOV R1, #2_01                      ; Define o valor para limpar a interrupção de J0
-    STR R1, [R0]                       ; Escreve no registrador ICR
-    B   Fim_Ver                        ; Salta para o final
-VerificaJ1
-    CMP R1, #2_10                      ; Compara o valor com o bit correspondente a J1
-    BNE VerificaAmbos                  ; Se não for igual, vai para VerificaAmbos
-    LDR R0, =GPIO_PORTJ_AHB_ICR_R      ; Carrega o endereço do registrador ICR da porta J
+    MOV R1, #2_01                       ; Define o valor para limpar a interrupção de J0
+    STR R1, [R0]                        ; Escreve no registrador ICR
+    B   Fim_Ver                         ; Salta para o final
+VerificaJ1  
+    CMP R1, #2_10                       ; Compara o valor com o bit correspondente a J1
+    BNE VerificaAmbos                   ; Se não for igual, vai para VerificaAmbos
+    LDR R0, =GPIO_PORTJ_AHB_ICR_R       ; Carrega o endereço do registrador ICR da porta J
 	CMP R6, #0
 	ITE EQ
-	MOVEQ R6, #1                 ; Se R6 = 0, muda o modo para 1
-	MOVNE R6, #0                 ; Se R6 = 1, muda o modo para 0
-    MOV R1, #2_10                      ; Define o valor para limpar a interrupção de J1
-    STR R1, [R0]                       ; Escreve no registrador ICR
-    B   Fim_Ver                        ; Salta para o final
+	MOVEQ R6, #1                        ; Se R6 = 0, muda o modo para 1
+	MOVNE R6, #0                        ; Se R6 = 1, muda o modo para 0
+    MOV R1, #2_10                       ; Define o valor para limpar a interrupção de J1
+    STR R1, [R0]                        ; Escreve no registrador ICR
+    B   Fim_Ver                         ; Salta para o final
 VerificaAmbos
-    CMP R1, #2_11                      ; Compara o valor com os bits correspondentes a J0 e J1
-    BNE Fim_Ver                        ; Se não for igual, vai para o final
-    LDR R0, =GPIO_PORTJ_AHB_ICR_R      ; Carrega o endereço do registrador ICR da porta J
-    MOV R1, #2_11                      ; Define o valor para limpar as interrupções de J0 e J1
-    STR R1, [R0]                       ; Escreve no registrador ICR
+    CMP R1, #2_11                       ; Compara o valor com os bits correspondentes a J0 e J1
+    BNE Fim_Ver                         ; Se não for igual, vai para o final
+    LDR R0, =GPIO_PORTJ_AHB_ICR_R       ; Carrega o endereço do registrador ICR da porta J
+    MOV R1, #2_11                       ; Define o valor para limpar as interrupções de J0 e J1
+    STR R1, [R0]                        ; Escreve no registrador ICR
 Fim_Ver
-    POP {LR}                           ; Restaura o registrador LR da pilha
-    BX LR                              ; Retorna para o chamador
+    POP {LR}                            ; Restaura o registrador LR da pilha
+    BX LR                               ; Retorna para o chamador
 
-    ALIGN                              ; garante que o fim da se��o est� alinhada 
-    END                                ; fim do arquivo
+    ALIGN                               ; garante que o fim da se��o est� alinhada 
+    END                                 ; fim do arquivo
