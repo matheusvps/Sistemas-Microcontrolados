@@ -240,6 +240,7 @@ NVIC_ST_CURRENT_R     EQU 0xE000E018
         EXPORT  SysTick_Init
 		EXPORT  SysTick_Wait1ms
 		EXPORT  SysTick_Wait1us
+        EXPORT  SysTick_Wait1s
 ;------------SysTick_Init------------
 ; Configura o sistema para utilizar o SysTick para delays
 ; Entrada: Nenhum
@@ -318,7 +319,25 @@ SysTick_Wait1us_loop
 SysTick_Wait1us_done
 	POP {R4, PC}                        ;return
 	
+;------------SysTick_Wait1s------------
+; Atraso de 1 segundo usando SysTick
+; Entrada: R0 --> N�mero de vezes para contar 1s.
+; Sa�da: N�o tem
+; Modifica: R0
 
+DELAY1S EQU 80000000 ; n�mero de ciclos de clock para contar 1s (assumindo 80 MHz)
+                   ; 80000000 x 12,5 ns = 1 ms
+SysTick_Wait1s
+    PUSH {R4, LR} 						; salva o valor atual de R4 e Link Register
+    MOVS R4, R0 						; R4 = R0  numEsperasRestantes com atualiza��o dos flags
+    BEQ SysTick_Wait1s_done 			; Se o numEsperasRestantes == 0, vai para o fim
+SysTick_Wait1s_loop					
+    LDR R0, =DELAY1S 					; R0 = DELAY1MS (n�mero de ticks para contar 1ms)
+    BL SysTick_Wait 					; chama a rotina para esperar por 1ms
+    SUBS R4, R4, #1 					; R4 = R4 - 1; numEsperasRestantes--
+    BHI SysTick_Wait1s_loop 			; se (numEsperasRestantes > 0), espera mais 1ms
+SysTick_Wait1s_done
+    POP {R4, PC}                        ;return
 ; -------------------------------------------------------------------------------------------------------------------------
 ; Fim do Arquivo
 ; -------------------------------------------------------------------------------------------------------------------------

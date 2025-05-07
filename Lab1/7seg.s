@@ -60,6 +60,7 @@ TRANSISTOR_Q2  EQU 0x20    ; PB5 (dezena)
 ; -----------------------------------------------------------------
 Seg_Display
         PUSH    {R1-R6, LR}
+        MOV     R4, R0     ; ← pega o valor passado em R0 como contador
 
         ;--- separa dezena e unidade a partir de R4 ---
         MOV     R0, R4          ; R0 = contador (0–99)

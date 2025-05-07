@@ -63,6 +63,7 @@ D7SEG_TABELA
 		IMPORT  SysTick_Init
 		IMPORT  SysTick_Wait1ms
 		IMPORT 	SysTick_Wait1us	
+        IMPORT  SysTick_Wait1s
 		IMPORT  GPIO_Init
         IMPORT  PortA_Output
 		IMPORT 	PortB_Output
@@ -86,23 +87,46 @@ Loop7segTeste
     MOV R0, #0x00
     BL Seg_Display
     MOV R0, #0x01
+    BL SysTick_Wait1s
     BL Seg_Display
+    MOV R0, #0x01
+    BL SysTick_Wait1s
     MOV R0, #0x02
     BL Seg_Display
+    MOV R0, #0x01
+    BL SysTick_Wait1s
     MOV R0, #0x03
     BL Seg_Display
+    MOV R0, #0x01
+    BL SysTick_Wait1s
     MOV R0, #0x04
     BL Seg_Display
+    MOV R0, #0x01
+    BL SysTick_Wait1s
     MOV R0, #0x05
     BL Seg_Display
+    MOV R0, #0x01
+    BL SysTick_Wait1s
     MOV R0, #0x06
     BL Seg_Display
+    MOV R0, #0x01
+    BL SysTick_Wait1s
     MOV R0, #0x07
     BL Seg_Display
+    MOV R0, #0x01
+    BL SysTick_Wait1s
     MOV R0, #0x08
     BL Seg_Display
+    MOV R0, #0x01
+    BL SysTick_Wait1s
     MOV R0, #0x09
     BL Seg_Display
+    MOV R0, #0x01
+    BL SysTick_Wait1s
+    MOV R0, #0x63
+    BL Seg_Display
+    MOV R0, #10
+    BL SysTick_Wait1s
     B Loop7segTeste
 
 ; LoopTeste
@@ -201,6 +225,7 @@ Write_Loop
     LDRB R1, [R0], #1               ; Lê o próximo caractere da string e incrementa o ponteiro
     CMP R1, #0                      ; Verifica se é o caractere nulo (fim da string)
     BEQ Write_End                   ; Se for nulo, termina a função
+    MOV R0, R1                      ; Move o caractere para R0
     BL LCD_Helper                   ; Envia o caractere para o LCD
     B Write_Loop                    ; Continua enviando os próximos caracteres
 
@@ -212,7 +237,7 @@ Write_End
 ; Função LCD_Display
 ; Mostra na tela o valor do passo e o modo (Crescente ou Decrescente)
 LCD_Display
-	PUSH {LR}
+	PUSH {R0, LR}
     LDR R0, =String_Passo           ; Carrega o endereço da string "Passo: "
     BL LCD_WriteString              ; Envia a string para o LCD
     MOV R0, R5                      ; Carrega o valor do passo em R0
