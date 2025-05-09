@@ -69,6 +69,15 @@ GPIO_PORTM_DEN_R            EQU     0x4006351C
 GPIO_PORTM_DATA_R           EQU     0x400633FC
 GPIO_PORTM               	EQU     2_000100000000000
 
+; PORT P
+GPIO_PORTP_AMSEL_R          EQU  0x40065528
+GPIO_PORTP_PCTL_R           EQU  0x4006552C
+GPIO_PORTP_DIR_R            EQU  0x40065400
+GPIO_PORTP_AFSEL_R          EQU  0x40065420
+GPIO_PORTP_DEN_R            EQU  0x4006551C
+GPIO_PORTP_DATA_R           EQU  0x400653FC
+GPIO_PORTP                  EQU  2_010000000000000
+
 ; PORT Q
 GPIO_PORTQ_AMSEL_R			EQU		0x40066528
 GPIO_PORTQ_PCTL_R			EQU		0x4006652C
@@ -111,6 +120,7 @@ GPIO_Init
     ORR     R1, #GPIO_PORTJ             ; Ativa o clock para a porta J
     ORR     R1, #GPIO_PORTK             ; Ativa o clock para a porta K
     ORR     R1, #GPIO_PORTM             ; Ativa o clock para a porta M
+    ORR     R1, #GPIO_PORTP             ; Ativa o clock para a porta P
     ORR     R1, #GPIO_PORTQ             ; Ativa o clock para a porta Q
     STR     R1, [R0]				    ; Move para a memória os bits das portas no endereço do RCGCGPIO
 
@@ -122,6 +132,7 @@ EsperaGPIO
     ORR     R2, #GPIO_PORTJ             ; Configura os bits para verificar a porta J
     ORR     R2, #GPIO_PORTK             ; Configura os bits para verificar a porta K
     ORR     R2, #GPIO_PORTM             ; Configura os bits para verificar a porta M
+    ORR     R2, #GPIO_PORTP             ; Configura os bits para verificar a porta P
     ORR     R2, #GPIO_PORTQ             ; Configura os bits para verificar a porta Q
     TST     R1, R2					    ; Testa o R1 com R2 fazendo R1 & R2
     BEQ     EsperaGPIO				    ; Se o flag Z=1, volta para o laço. Senão continua executando
@@ -138,6 +149,8 @@ EsperaGPIO
     STR     R1, [R0]                        ; Escreve no registrador AMSEL
     LDR     R0, =GPIO_PORTM_AMSEL_R         ; Endereço do AMSEL para a porta M
     STR     R1, [R0]                        ; Escreve no registrador AMSEL
+    LDR     R0, =GPIO_PORTP_AMSEL_R         ; Endereço do AMSEL para a porta P
+    STR     R1, [R0]                        ; Escreve no registrador AMSEL
     LDR     R0, =GPIO_PORTQ_AMSEL_R         ; Endereço do AMSEL para a porta Q
     STR     R1, [R0]                        ; Escreve no registrador AMSEL
 
@@ -152,6 +165,8 @@ EsperaGPIO
     LDR     R0, =GPIO_PORTK_PCTL_R          ; Endereço do PCTL para a porta K
     STR     R1, [R0]                        ; Escreve no registrador PCTL
     LDR     R0, =GPIO_PORTM_PCTL_R          ; Endereço do PCTL para a porta M
+    STR     R1, [R0]                        ; Escreve no registrador PCTL
+    LDR     R0, =GPIO_PORTP_PCTL_R          ; Endereço do PCTL para a porta P
     STR     R1, [R0]                        ; Escreve no registrador PCTL
     LDR     R0, =GPIO_PORTQ_PCTL_R          ; Endereço do PCTL para a porta Q
     STR     R1, [R0]                        ; Escreve no registrador PCTL
@@ -182,6 +197,11 @@ EsperaGPIO
     MOV     R1, #2_00000111                 ; Configura PM2–PM0 como saída
     STR     R1, [R0]                        ; Escreve no registrador DIR
 
+    ; Configura PP5 como saída (LEDs)
+    LDR     R0, =GPIO_PORTP_DIR_R           ; Endereço do DIR para a porta P
+    MOV     R1, #2_00100000                 ; Configura PP5 como saída
+    STR     R1, [R0]                        ; Escreve no registrador DIR
+
     ; Configura PQ3:PQ0 como saída (displays de 7 segmentos)
     LDR     R0, =GPIO_PORTQ_DIR_R           ; Endereço do DIR para a porta Q
     MOV     R1, #2_00001111                 ; PQ3:PQ0 como saída
@@ -200,6 +220,8 @@ EsperaGPIO
     STR     R1, [R0]                        ; Escreve no registrador AFSEL
     LDR     R0, =GPIO_PORTM_AFSEL_R         ; Endereço do AFSEL para a porta M
     STR     R1, [R0]                        ; Escreve no registrador AFSEL
+    LDR     R0, =GPIO_PORTP_AFSEL_R         ; Endereço do AFSEL para a porta P
+    STR     R1, [R0]                        ; Escreve no registrador AFSEL
     LDR     R0, =GPIO_PORTQ_AFSEL_R         ; Endereço do AFSEL para a porta Q
     STR     R1, [R0]                        ; Escreve no registrador AFSEL
 
@@ -212,9 +234,9 @@ EsperaGPIO
     MOV     R1, #2_00110000                 ; Habilita PB5 e PB4 como digital
     STR     R1, [R0]                        ; Escreve no registrador DEN
 
-    LDR   R0, =GPIO_PORTJ_AHB_DEN_R         ; Endereço do DEN para a porta J
-    MOV   R1, #0x03                         ; Bits 1:0 = 1, habilita PJ0 e PJ1 como digitais
-    STR   R1, [R0]                          ; Escreve no registrador DEN
+    LDR     R0, =GPIO_PORTJ_AHB_DEN_R         ; Endereço do DEN para a porta J
+    MOV     R1, #0x03                         ; Bits 1:0 = 1, habilita PJ0 e PJ1 como digitais
+    STR     R1, [R0]                          ; Escreve no registrador DEN
 
     LDR     R0, =GPIO_PORTK_DEN_R           ; Endereço do DEN para a porta K
     MOV     R1, #2_11111111                 ; Habilita todos os pinos como digitais (PK7–PK0)
@@ -222,6 +244,10 @@ EsperaGPIO
 
     LDR     R0, =GPIO_PORTM_DEN_R           ; Endereço do DEN para a porta M
     MOV     R1, #2_00000111                 ; Habilita PM2–PM0 como digitais
+    STR     R1, [R0]                        ; Escreve no registrador DEN
+
+    LDR     R0, =GPIO_PORTP_DEN_R           ; Endereço do DEN para a porta P
+    MOV     R1, #2_00100000                 ; Habilita PP5 como digital
     STR     R1, [R0]                        ; Escreve no registrador DEN
 
     LDR     R0, =GPIO_PORTQ_DEN_R           ; Endereço do DEN para a porta Q
@@ -288,6 +314,20 @@ PortM_Output
     LDR     R2, [R1]                ; Lê o valor atual do registrador de dados
     BIC     R2, R2, #2_00000111     ; Limpa os bits PM2:PM0 (0b00000111)
     ORR     R2, R2, R0              ; Define os bits PM2:PM0 com o valor de R0
+    STR     R2, [R1]                ; Escreve o valor atualizado no registrador de dados
+    POP		{R1, R2, LR}
+    BX      LR                      ; Retorna da função
+
+; -------------------------------------------------------------------------------
+; Função PortP_Output
+; Parâmetro de entrada: R0 --> Valor a ser escrito no pino PP5
+; Parâmetro de saída: Nenhum
+PortP_Output
+    PUSH	{R1, R2, LR}
+    LDR     R1, =GPIO_PORTP_DATA_R  ; Carrega o endereço do registrador de dados da porta P
+    LDR     R2, [R1]                ; Lê o valor atual do registrador de dados
+    BIC     R2, R2, #2_00100000     ; Limpa o bit PP5 (0b00100000)
+    ORR     R2, R2, R0              ; Define o bit PP5 com o valor de R0
     STR     R2, [R1]                ; Escreve o valor atualizado no registrador de dados
     POP		{R1, R2, LR}
     BX      LR                      ; Retorna da função
