@@ -917,13 +917,13 @@ ARM Macro Assembler    Page 15
   326 0000018A         ; Número em R0 é separado em dígito dezena no R1 e un
                        idade no R2
   327 0000018A         Extract_Digits
-  328 0000018A B509            PUSH             {R0, R3, LR}
+  328 0000018A B508            PUSH             {R3, LR}
   329 0000018C F04F 030A       MOV              R3, #10     ; Divisor = 10
   330 00000190 FBB0 F1F3       UDIV             R1, R0, R3  ; R1 = R0 / 10 (dez
                                                             ena)
   331 00000194 FB03 0211       MLS              R2, R3, R1, R0 ; R2 = R0 - (R1 
                                                             * 10) (unidade)
-  332 00000198 E8BD 4009       POP              {R0, R3, LR}
+  332 00000198 E8BD 4008       POP              {R3, LR}
   333 0000019C 4770            BX               LR
   334 0000019E         
   335 0000019E         ; ------------------------------------------------------

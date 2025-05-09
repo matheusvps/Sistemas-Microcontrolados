@@ -36,6 +36,7 @@ D7SEG_TABELA
     ; Se chamar alguma função externa	
     ;IMPORT <func>              ; Permite chamar dentro deste arquivo uma função <func>
     IMPORT SysTick_Wait1us
+    IMPORT SysTick_Wait1ms
     IMPORT PortA_Output
     IMPORT PortB_Output
     IMPORT PortQ_Output

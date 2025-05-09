@@ -44,47 +44,46 @@ MS250_IN_US EQU 100000
 ; R6 = modo     (0=crescente,1=decrescente)
 ; -------------------------------------------------------------------------------
 ; Função main()
-Start  		
-	BL PLL_Init     ; Chama a subrotina para alterar o clock do microcontrolador para 80MHz
-	BL SysTick_Init ; Chama a subrotina que inicializa o SysTick 
-	BL GPIO_Init    ; Chama a subrotina que inicializa os GPIO
-	BL LCD_Init     ; Chama a subrotina que inicializa o LCD
+Start
+    BL PLL_Init        ; Configura clock para 80MHz
+    BL SysTick_Init    ; Inicializa SysTick
+    BL GPIO_Init       ; Geral GPIO (inclui PortJ_Init)
+    BL LCD_Init        ; Inicializa LCD
 
-    MOV R5, #1              ; Passo inicial = 1
-    LDR R8, =MS250_IN_US    ; Tempo de contagem (200000 x 5us = 1s)
+    MOV R5, #1         ; Passo inicial = 1
+    MOV R6, #0         ; Modo inicial = crescente   
+    LDR R8, =MS250_IN_US ; Tempo de contagem (200000 x 5µs = 1s)
 ; LoopTeste
-; 	MOV R0, #39
-; 	BL LCD_WriteNumber
+;  	MOV R0, #39
+;  	BL LCD_WriteNumber
 ;     B LoopTeste
-
 MainLoop
-    MOV R7, #0              ; Cronômetro
-    CMP R6, #0
-    BEQ IncrementaContagem
-VOLTA_INCREMENTA
-    CMP R6, #0
-    BNE DecrementaContagem
-VOLTA_DECREMENTA
-    BL Seg_Display          ; Exibe o número no display de 7 segmentos
-    ADD R7, #1              ; Incrementa o cronômetro
-    CMP R7, R8              ; Verifica se passou 1s
-    BLT VOLTA_DECREMENTA    ; Enquanto não passou 1s, mostra o mesmo número
-    B MainLoop
+    MOV R7, #0         ; Cronômetro
+ShowOnDisplay
+    BL Seg_Display     ; Exibe número no display de 7 segmentos
+    ADD R7, R7, #1     ; Incrementa cronômetro
+    CMP R7, R8         ; Verifica se passou 1s
+    BLT ShowOnDisplay  ; Enquanto não passou 1s
 
-IncrementaContagem
-    ADD R4, R4, R5
+    ; Atualiza contador conforme modo
+    CMP R6, #0
+    BEQ DoIncrement
+    SUB R4, R4, R5     ; modo decrescente
+    B CheckUnderflow
+DoIncrement
+    ADD R4, R4, R5     ; modo crescente
     CMP R4, #100
-    BLE VOLTA_INCREMENTA
+    BLE ContinueLoop
     SUB R4, R4, #100
-    B VOLTA_INCREMENTA
+    B ContinueLoop
 
-DecrementaContagem
-    SUB R4, R4, R5
+CheckUnderflow
     CMP R4, #0
-    BGE VOLTA_DECREMENTA
+    BGE ContinueLoop
     ADD R4, R4, #100
-    B VOLTA_DECREMENTA
 
+ContinueLoop
+    B MainLoop
 ; -------------------------------------------------------------------------------------------------------------------------
 ; Fim do Arquivo
 ; -------------------------------------------------------------------------------------------------------------------------	
