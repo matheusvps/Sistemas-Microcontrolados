@@ -224,779 +224,742 @@ ARM Macro Assembler    Page 4
    87 00000000                 AREA             |.text|, CODE, READONLY, ALIGN=
 2
    88 00000000         ; Se alguma função do arquivo for chamada em outro arq
-                       uivo 
+                       uivo
    89 00000000                 EXPORT           GPIO_Init   ; Permite chamar GP
                                                             IO_Init de outro ar
                                                             quivo
-   90 00000000                 EXPORT           GPIOPortJ_Handler ; Permite cha
-                                                            mar GPIOPortJ_Handl
-                                                            er de outro arquivo
-                                                            
-   91 00000000                 EXPORT           PortA_Output ; Permite chamar P
+   90 00000000                 EXPORT           PortA_Output ; Permite chamar P
                                                             ortA_Output de outr
                                                             o arquivo
-   92 00000000                 EXPORT           PortB_Output ; Permite chamar P
+   91 00000000                 EXPORT           PortB_Output ; Permite chamar P
                                                             ortB_Output de outr
                                                             o arquivo
-   93 00000000                 EXPORT           PortK_Output ; Permite chamar P
+   92 00000000                 EXPORT           PortK_Output ; Permite chamar P
                                                             ortK_Output de outr
                                                             o arquivo
-   94 00000000                 EXPORT           PortM_Output ; Permite chamar P
+   93 00000000                 EXPORT           PortM_Output ; Permite chamar P
                                                             ortM_Output de outr
                                                             o arquivo
-   95 00000000                 EXPORT           PortQ_Output ; Permite chamar P
+   94 00000000                 EXPORT           PortQ_Output ; Permite chamar P
                                                             ortQ_Output de outr
                                                             o arquivo
-   96 00000000         
-   97 00000000         ;-------------------------------------------------------
+   95 00000000                 EXPORT           GPIOPortJ_Init ; Permite chamar
+                                                             GPIO_PortJ_Init de
+                                                             outro arquivo
+   96 00000000                 EXPORT           GPIOPortJ_Handler ; Permite ace
+                                                            sso do sistem ao GP
+                                                            IOPortJ_Handler
+   97 00000000         
+   98 00000000         ;-------------------------------------------------------
                        -------------------------
-   98 00000000         ; Função GPIO_Init
-   99 00000000         ; Parâmetro de entrada: Não tem
-  100 00000000         ; Parâmetro de saída: Não tem
-  101 00000000         GPIO_Init
-  102 00000000         ;=====================
-  103 00000000         ; 1. Ativar o clock para a porta setando o bit correspon
-                       dente no registrador RCGCGPIO,
-  104 00000000         ; após isso verificar no PRGPIO se a porta está pronta
+   99 00000000         ; Função GPIO_Init
+  100 00000000         ; Parâmetro de entrada: Não tem
+  101 00000000         ; Parâmetro de saída: Não tem
+  102 00000000         GPIO_Init
+  103 00000000         ;=====================
+  104 00000000         ; 1. Ativar o clock para a porta setando o bit correspon
 
 
 
 ARM Macro Assembler    Page 5 
 
 
+                       dente no registrador RCGCGPIO,
+  105 00000000         ; após isso verificar no PRGPIO se a porta está pronta
                         para uso.
-  105 00000000         ; enable clock to GPIOF at clock gating register
-  106 00000000 B507            PUSH             {R0, R1, R2, LR} ; Salva os reg
+  106 00000000         ; enable clock to GPIOF at clock gating register
+  107 00000000 B507            PUSH             {R0, R1, R2, LR} ; Salva os reg
                                                             istradores que ser�
                                                             �o usados na pilha
-  107 00000002 488D            LDR              R0, =SYSCTL_RCGCGPIO_R ; Carreg
+  108 00000002 487F            LDR              R0, =SYSCTL_RCGCGPIO_R ; Carreg
                                                             a o endereço do re
                                                             gistrador RCGCGPIO
-  108 00000004 F04F 0101       MOV              R1, #GPIO_PORTA ; Ativa o clock
+  109 00000004 F04F 0101       MOV              R1, #GPIO_PORTA ; Ativa o clock
                                                              para a porta A
-  109 00000008 F041 0102       ORR              R1, #GPIO_PORTB ; Ativa o clock
+  110 00000008 F041 0102       ORR              R1, #GPIO_PORTB ; Ativa o clock
                                                              para a porta B
-  110 0000000C F441 7180       ORR              R1, #GPIO_PORTJ ; Ativa o clock
+  111 0000000C F441 7180       ORR              R1, #GPIO_PORTJ ; Ativa o clock
                                                              para a porta J
-  111 00000010 F441 7100       ORR              R1, #GPIO_PORTK ; Ativa o clock
+  112 00000010 F441 7100       ORR              R1, #GPIO_PORTK ; Ativa o clock
                                                              para a porta K
-  112 00000014 F441 6100       ORR              R1, #GPIO_PORTM ; Ativa o clock
+  113 00000014 F441 6100       ORR              R1, #GPIO_PORTM ; Ativa o clock
                                                              para a porta M
-  113 00000018 F441 4180       ORR              R1, #GPIO_PORTQ ; Ativa o clock
+  114 00000018 F441 4180       ORR              R1, #GPIO_PORTQ ; Ativa o clock
                                                              para a porta Q
-  114 0000001C 6001            STR              R1, [R0]    ; Move para a memó
+  115 0000001C 6001            STR              R1, [R0]    ; Move para a memó
                                                             ria os bits das por
                                                             tas no endereço do
                                                              RCGCGPIO
-  115 0000001E         
-  116 0000001E 4887            LDR              R0, =SYSCTL_PRGPIO_R ; Carrega 
+  116 0000001E         
+  117 0000001E 4879            LDR              R0, =SYSCTL_PRGPIO_R ; Carrega 
                                                             o endereço do PRGP
                                                             IO para esperar os 
                                                             GPIO ficarem pronto
                                                             s
-  117 00000020         EsperaGPIO
-  118 00000020 6801            LDR              R1, [R0]    ; Lê da memória o
+  118 00000020         EsperaGPIO
+  119 00000020 6801            LDR              R1, [R0]    ; Lê da memória o
                                                              conteúdo do ender
                                                             eço do registrador
                                                             
-  119 00000022 F04F 0201       MOV              R2, #GPIO_PORTA ; Configura os 
+  120 00000022 F04F 0201       MOV              R2, #GPIO_PORTA ; Configura os 
                                                             bits para verificar
                                                              a porta A
-  120 00000026 F042 0202       ORR              R2, #GPIO_PORTB ; Configura os 
+  121 00000026 F042 0202       ORR              R2, #GPIO_PORTB ; Configura os 
                                                             bits para verificar
                                                              a porta B
-  121 0000002A F442 7280       ORR              R2, #GPIO_PORTJ ; Configura os 
+  122 0000002A F442 7280       ORR              R2, #GPIO_PORTJ ; Configura os 
                                                             bits para verificar
                                                              a porta J
-  122 0000002E F442 7200       ORR              R2, #GPIO_PORTK ; Configura os 
+  123 0000002E F442 7200       ORR              R2, #GPIO_PORTK ; Configura os 
                                                             bits para verificar
                                                              a porta K
-  123 00000032 F442 6200       ORR              R2, #GPIO_PORTM ; Configura os 
+  124 00000032 F442 6200       ORR              R2, #GPIO_PORTM ; Configura os 
                                                             bits para verificar
                                                              a porta M
-  124 00000036 F442 4280       ORR              R2, #GPIO_PORTQ ; Configura os 
+  125 00000036 F442 4280       ORR              R2, #GPIO_PORTQ ; Configura os 
                                                             bits para verificar
                                                              a porta Q
-  125 0000003A 4211            TST              R1, R2      ; Testa o R1 com R2
+  126 0000003A 4211            TST              R1, R2      ; Testa o R1 com R2
                                                              fazendo R1 & R2
-  126 0000003C D0F0            BEQ              EsperaGPIO  ; Se o flag Z=1, vo
+  127 0000003C D0F0            BEQ              EsperaGPIO  ; Se o flag Z=1, vo
                                                             lta para o laço. S
-                                                            enão continua exec
-                                                            utando
 
 
 
 ARM Macro Assembler    Page 6 
 
 
-  127 0000003E         
-  128 0000003E         ; 2. Limpar o AMSEL para desabilitar a analógica
-  129 0000003E F04F 0100       MOV              R1, #0x00   ; Colocar 0 no regi
+                                                            enão continua exec
+                                                            utando
+  128 0000003E         
+  129 0000003E         ; 2. Limpar o AMSEL para desabilitar a analógica
+  130 0000003E F04F 0100       MOV              R1, #0x00   ; Colocar 0 no regi
                                                             strador para desabi
                                                             litar a função an
                                                             alógica
-  130 00000042 487F            LDR              R0, =GPIO_PORTA_AHB_AMSEL_R ; E
+  131 00000042 4871            LDR              R0, =GPIO_PORTA_AHB_AMSEL_R ; E
                                                             ndereço do AMSEL p
                                                             ara a porta A
-  131 00000044 6001            STR              R1, [R0]    ; Escreve no regist
+  132 00000044 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador AMSEL
-  132 00000046 487F            LDR              R0, =GPIO_PORTB_AHB_AMSEL_R ; E
+  133 00000046 4871            LDR              R0, =GPIO_PORTB_AHB_AMSEL_R ; E
                                                             ndereço do AMSEL p
                                                             ara a porta B
-  133 00000048 6001            STR              R1, [R0]    ; Escreve no regist
+  134 00000048 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador AMSEL
-  134 0000004A 487F            LDR              R0, =GPIO_PORTJ_AHB_AMSEL_R ; E
+  135 0000004A 4871            LDR              R0, =GPIO_PORTJ_AHB_AMSEL_R ; E
                                                             ndereço do AMSEL p
                                                             ara a porta J
-  135 0000004C 6001            STR              R1, [R0]    ; Escreve no regist
+  136 0000004C 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador AMSEL
-  136 0000004E 487F            LDR              R0, =GPIO_PORTK_AMSEL_R ; Ender
+  137 0000004E 4871            LDR              R0, =GPIO_PORTK_AMSEL_R ; Ender
                                                             eço do AMSEL para 
                                                             a porta K
-  137 00000050 6001            STR              R1, [R0]    ; Escreve no regist
+  138 00000050 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador AMSEL
-  138 00000052 487F            LDR              R0, =GPIO_PORTM_AMSEL_R ; Ender
+  139 00000052 4871            LDR              R0, =GPIO_PORTM_AMSEL_R ; Ender
                                                             eço do AMSEL para 
                                                             a porta M
-  139 00000054 6001            STR              R1, [R0]    ; Escreve no regist
+  140 00000054 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador AMSEL
-  140 00000056 487F            LDR              R0, =GPIO_PORTQ_AMSEL_R ; Ender
+  141 00000056 4871            LDR              R0, =GPIO_PORTQ_AMSEL_R ; Ender
                                                             eço do AMSEL para 
                                                             a porta Q
-  141 00000058 6001            STR              R1, [R0]    ; Escreve no regist
-                                                            rador AMSEL    
-  142 0000005A         
-  143 0000005A         ; 3. Limpar PCTL para selecionar o GPIO
-  144 0000005A F04F 0100       MOV              R1, #0x00   ; Configura 0 para 
+  142 00000058 6001            STR              R1, [R0]    ; Escreve no regist
+                                                            rador AMSEL
+  143 0000005A         
+  144 0000005A         ; 3. Limpar PCTL para selecionar o GPIO
+  145 0000005A F04F 0100       MOV              R1, #0x00   ; Configura 0 para 
                                                             selecionar GPIO
-  145 0000005E 487E            LDR              R0, =GPIO_PORTA_AHB_PCTL_R ; En
+  146 0000005E 4870            LDR              R0, =GPIO_PORTA_AHB_PCTL_R ; En
                                                             dereço do PCTL par
                                                             a a porta A
-  146 00000060 6001            STR              R1, [R0]    ; Escreve no regist
+  147 00000060 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador PCTL
-  147 00000062 487E            LDR              R0, =GPIO_PORTB_AHB_PCTL_R ; En
+  148 00000062 4870            LDR              R0, =GPIO_PORTB_AHB_PCTL_R ; En
                                                             dereço do PCTL par
                                                             a a porta B
-  148 00000064 6001            STR              R1, [R0]    ; Escreve no regist
+  149 00000064 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador PCTL
-  149 00000066 487E            LDR              R0, =GPIO_PORTJ_AHB_PCTL_R ; En
+  150 00000066 4870            LDR              R0, =GPIO_PORTJ_AHB_PCTL_R ; En
                                                             dereço do PCTL par
                                                             a a porta J
-  150 00000068 6001            STR              R1, [R0]    ; Escreve no regist
+  151 00000068 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador PCTL
-  151 0000006A 487E            LDR              R0, =GPIO_PORTK_PCTL_R ; Endere
+  152 0000006A 4870            LDR              R0, =GPIO_PORTK_PCTL_R ; Endere
                                                             ço do PCTL para a 
-                                                            porta K
-  152 0000006C 6001            STR              R1, [R0]    ; Escreve no regist
 
 
 
 ARM Macro Assembler    Page 7 
 
 
+                                                            porta K
+  153 0000006C 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador PCTL
-  153 0000006E 487E            LDR              R0, =GPIO_PORTM_PCTL_R ; Endere
+  154 0000006E 4870            LDR              R0, =GPIO_PORTM_PCTL_R ; Endere
                                                             ço do PCTL para a 
                                                             porta M
-  154 00000070 6001            STR              R1, [R0]    ; Escreve no regist
+  155 00000070 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador PCTL
-  155 00000072 487E            LDR              R0, =GPIO_PORTQ_PCTL_R ; Endere
+  156 00000072 4870            LDR              R0, =GPIO_PORTQ_PCTL_R ; Endere
                                                             ço do PCTL para a 
                                                             porta Q
-  156 00000074 6001            STR              R1, [R0]    ; Escreve no regist
+  157 00000074 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador PCTL
-  157 00000076         
-  158 00000076         ; 4. DIR para 0 se for entrada, 1 se for saída
-  159 00000076         ; Configura PA7:PA4 como saída (displays de 7 segmentos
+  158 00000076         
+  159 00000076         ; 4. DIR para 0 se for entrada, 1 se for saída
+  160 00000076         ; Configura PA7:PA4 como saída (displays de 7 segmentos
                        )
-  160 00000076 487E            LDR              R0, =GPIO_PORTA_AHB_DIR_R ; End
+  161 00000076 4870            LDR              R0, =GPIO_PORTA_AHB_DIR_R ; End
                                                             ereço do DIR para 
                                                             a porta A
-  161 00000078 F04F 01F0       MOV              R1, #2_11110000 ; PA7:PA4 como 
+  162 00000078 F04F 01F0       MOV              R1, #2_11110000 ; PA7:PA4 como 
                                                             saída
-  162 0000007C 6001            STR              R1, [R0]    ; Escreve no regist
+  163 0000007C 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador DIR
-  163 0000007E         
-  164 0000007E         ; Configura PB5 e PB4 como saída (transistores)
-  165 0000007E 487D            LDR              R0, =GPIO_PORTB_AHB_DIR_R ; End
+  164 0000007E         
+  165 0000007E         ; Configura PB5 e PB4 como saída (transistores)
+  166 0000007E 486F            LDR              R0, =GPIO_PORTB_AHB_DIR_R ; End
                                                             ereço do DIR para 
                                                             a porta B
-  166 00000080 F04F 0130       MOV              R1, #2_00110000 ; PB5 e PB4 com
+  167 00000080 F04F 0130       MOV              R1, #2_00110000 ; PB5 e PB4 com
                                                             o saída
-  167 00000084 6001            STR              R1, [R0]    ; Escreve no regist
+  168 00000084 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador DIR
-  168 00000086         
-  169 00000086         ; Configura PJ0 e PJ1 como entrada (botões USR_SW1 e US
+  169 00000086         
+  170 00000086         ; Configura PJ0 e PJ1 como entrada (botões USR_SW1 e US
                        R_SW2)
-  170 00000086 487C            LDR              R0, =GPIO_PORTJ_AHB_DIR_R ; End
+  171 00000086 486E            LDR              R0, =GPIO_PORTJ_AHB_DIR_R ; End
                                                             ereço do DIR para 
                                                             a porta J
-  171 00000088 F04F 0100       MOV              R1, #0x00000000 ; PJ0 e PJ1 com
+  172 00000088 F04F 0100       MOV              R1, #0x00000000 ; PJ0 e PJ1 com
                                                             o entrada
-  172 0000008C 6001            STR              R1, [R0]    ; Escreve no regist
+  173 0000008C 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador DIR
-  173 0000008E         
-  174 0000008E         ; Configura PK7:PK0 como saída (LCD)
-  175 0000008E 487B            LDR              R0, =GPIO_PORTK_DIR_R ; Endere�
+  174 0000008E         
+  175 0000008E         ; Configura PK7:PK0 como saída (LCD)
+  176 0000008E 486D            LDR              R0, =GPIO_PORTK_DIR_R ; Endere�
                                                             �o do DIR para a po
                                                             rta K
-  176 00000090 F04F 01FF       MOV              R1, #2_11111111 ; Configura PK7
+  177 00000090 F04F 01FF       MOV              R1, #2_11111111 ; Configura PK7
                                                             –PK0 como saída
-  177 00000094 6001            STR              R1, [R0]    ; Escreve no regist
+  178 00000094 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador DIR
-  178 00000096         
-  179 00000096         ; Configura PM2:PM0 como saída (LCD)
-  180 00000096 487A            LDR              R0, =GPIO_PORTM_DIR_R ; Endere�
+  179 00000096         
+  180 00000096         ; Configura PM2:PM0 como saída (LCD)
+  181 00000096 486C            LDR              R0, =GPIO_PORTM_DIR_R ; Endere�
                                                             �o do DIR para a po
                                                             rta M
-  181 00000098 F04F 0107       MOV              R1, #2_00000111 ; Configura PM2
+  182 00000098 F04F 0107       MOV              R1, #2_00000111 ; Configura PM2
                                                             –PM0 como saída
-  182 0000009C 6001            STR              R1, [R0]    ; Escreve no regist
-                                                            rador DIR
 
 
 
 ARM Macro Assembler    Page 8 
 
 
-  183 0000009E         
-  184 0000009E         ; Configura PQ3:PQ0 como saída (displays de 7 segmentos
+  183 0000009C 6001            STR              R1, [R0]    ; Escreve no regist
+                                                            rador DIR
+  184 0000009E         
+  185 0000009E         ; Configura PQ3:PQ0 como saída (displays de 7 segmentos
                        )
-  185 0000009E 4879            LDR              R0, =GPIO_PORTQ_DIR_R ; Endere�
+  186 0000009E 486B            LDR              R0, =GPIO_PORTQ_DIR_R ; Endere�
                                                             �o do DIR para a po
                                                             rta Q
-  186 000000A0 F04F 010F       MOV              R1, #2_00001111 ; PQ3:PQ0 como 
+  187 000000A0 F04F 010F       MOV              R1, #2_00001111 ; PQ3:PQ0 como 
                                                             saída
-  187 000000A4 6001            STR              R1, [R0]    ; Escreve no regist
+  188 000000A4 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador DIR
-  188 000000A6         
-  189 000000A6         ; 5. Limpar os bits AFSEL para 0 para selecionar GPIO 
-  190 000000A6         ;    Sem função alternativa
-  191 000000A6 F04F 0100       MOV              R1, #0x00   ; Configura 0 para 
+  189 000000A6         
+  190 000000A6         ; 5. Limpar os bits AFSEL para 0 para selecionar GPIO
+  191 000000A6         ;    Sem função alternativa
+  192 000000A6 F04F 0100       MOV              R1, #0x00   ; Configura 0 para 
                                                             desabilitar funçã
                                                             o alternativa
-  192 000000AA 4877            LDR              R0, =GPIO_PORTA_AHB_AFSEL_R ; E
+  193 000000AA 4869            LDR              R0, =GPIO_PORTA_AHB_AFSEL_R ; E
                                                             ndereço do AFSEL p
                                                             ara a porta A
-  193 000000AC 6001            STR              R1, [R0]    ; Escreve no regist
+  194 000000AC 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador AFSEL
-  194 000000AE 4877            LDR              R0, =GPIO_PORTB_AHB_AFSEL_R ; E
+  195 000000AE 4869            LDR              R0, =GPIO_PORTB_AHB_AFSEL_R ; E
                                                             ndereço do AFSEL p
                                                             ara a porta B
-  195 000000B0 6001            STR              R1, [R0]    ; Escreve no regist
+  196 000000B0 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador AFSEL
-  196 000000B2 4877            LDR              R0, =GPIO_PORTJ_AHB_AFSEL_R ; E
+  197 000000B2 4869            LDR              R0, =GPIO_PORTJ_AHB_AFSEL_R ; E
                                                             ndereço do AFSEL p
                                                             ara a porta J
-  197 000000B4 6001            STR              R1, [R0]    ; Escreve no regist
+  198 000000B4 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador AFSEL
-  198 000000B6 4877            LDR              R0, =GPIO_PORTK_AFSEL_R ; Ender
+  199 000000B6 4869            LDR              R0, =GPIO_PORTK_AFSEL_R ; Ender
                                                             eço do AFSEL para 
                                                             a porta K
-  199 000000B8 6001            STR              R1, [R0]    ; Escreve no regist
+  200 000000B8 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador AFSEL
-  200 000000BA 4877            LDR              R0, =GPIO_PORTM_AFSEL_R ; Ender
+  201 000000BA 4869            LDR              R0, =GPIO_PORTM_AFSEL_R ; Ender
                                                             eço do AFSEL para 
                                                             a porta M
-  201 000000BC 6001            STR              R1, [R0]    ; Escreve no regist
+  202 000000BC 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador AFSEL
-  202 000000BE 4877            LDR              R0, =GPIO_PORTQ_AFSEL_R ; Ender
+  203 000000BE 4869            LDR              R0, =GPIO_PORTQ_AFSEL_R ; Ender
                                                             eço do AFSEL para 
                                                             a porta Q
-  203 000000C0 6001            STR              R1, [R0]    ; Escreve no regist
+  204 000000C0 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador AFSEL
-  204 000000C2         
-  205 000000C2         ; 6. Setar os bits de DEN para habilitar I/O digital
-  206 000000C2 4877            LDR              R0, =GPIO_PORTA_AHB_DEN_R ; End
+  205 000000C2         
+  206 000000C2         ; 6. Setar os bits de DEN para habilitar I/O digital
+  207 000000C2 4869            LDR              R0, =GPIO_PORTA_AHB_DEN_R ; End
                                                             ereço do DEN para 
                                                             a porta A
-  207 000000C4 F04F 01F0       MOV              R1, #2_11110000 ; Habilita PA7:
+  208 000000C4 F04F 01F0       MOV              R1, #2_11110000 ; Habilita PA7:
                                                             PA4 como digital
-  208 000000C8 6001            STR              R1, [R0]    ; Escreve no regist
+  209 000000C8 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador DEN
-  209 000000CA         
-  210 000000CA 4876            LDR              R0, =GPIO_PORTB_AHB_DEN_R ; End
-                                                            ereço do DEN para 
-                                                            a porta B
+  210 000000CA         
+  211 000000CA 4868            LDR              R0, =GPIO_PORTB_AHB_DEN_R ; End
 
 
 
 ARM Macro Assembler    Page 9 
 
 
-  211 000000CC F04F 0130       MOV              R1, #2_00110000 ; Habilita PB5 
+                                                            ereço do DEN para 
+                                                            a porta B
+  212 000000CC F04F 0130       MOV              R1, #2_00110000 ; Habilita PB5 
                                                             e PB4 como digital
-  212 000000D0 6001            STR              R1, [R0]    ; Escreve no regist
+  213 000000D0 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador DEN
-  213 000000D2         
-  214 000000D2 4875            LDR              R0, =GPIO_PORTJ_AHB_DEN_R ; End
+  214 000000D2         
+  215 000000D2 4867            LDR              R0, =GPIO_PORTJ_AHB_DEN_R ; End
                                                             ereço do DEN para 
                                                             a porta J
-  215 000000D4 F04F 0111       MOV              R1, #0x00000011 ; Habilita PJ0 
-                                                            e PJ1 como digital
-  216 000000D8 6001            STR              R1, [R0]    ; Escreve no regist
+  216 000000D4 F04F 0103       MOV              R1, #0x03   ; Bits 1:0 = 1, hab
+                                                            ilita PJ0 e PJ1 com
+                                                            o digitais
+  217 000000D8 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador DEN
-  217 000000DA         
-  218 000000DA 4874            LDR              R0, =GPIO_PORTK_DEN_R ; Endere�
+  218 000000DA         
+  219 000000DA 4866            LDR              R0, =GPIO_PORTK_DEN_R ; Endere�
                                                             �o do DEN para a po
                                                             rta K
-  219 000000DC F04F 01FF       MOV              R1, #2_11111111 ; Habilita todo
+  220 000000DC F04F 01FF       MOV              R1, #2_11111111 ; Habilita todo
                                                             s os pinos como dig
                                                             itais (PK7–PK0)
-  220 000000E0 6001            STR              R1, [R0]    ; Escreve no regist
+  221 000000E0 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador DEN
-  221 000000E2         
-  222 000000E2 4873            LDR              R0, =GPIO_PORTM_DEN_R ; Endere�
+  222 000000E2         
+  223 000000E2 4865            LDR              R0, =GPIO_PORTM_DEN_R ; Endere�
                                                             �o do DEN para a po
                                                             rta M
-  223 000000E4 F04F 0107       MOV              R1, #2_00000111 ; Habilita PM2�
+  224 000000E4 F04F 0107       MOV              R1, #2_00000111 ; Habilita PM2�
                                                             ��PM0 como digitais
                                                             
-  224 000000E8 6001            STR              R1, [R0]    ; Escreve no regist
+  225 000000E8 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador DEN
-  225 000000EA         
-  226 000000EA 4872            LDR              R0, =GPIO_PORTQ_DEN_R ; Endere�
+  226 000000EA         
+  227 000000EA 4864            LDR              R0, =GPIO_PORTQ_DEN_R ; Endere�
                                                             �o do DEN para a po
                                                             rta Q
-  227 000000EC F04F 010F       MOV              R1, #2_00001111 ; Habilita PQ3:
+  228 000000EC F04F 010F       MOV              R1, #2_00001111 ; Habilita PQ3:
                                                             PQ0 como digital
-  228 000000F0 6001            STR              R1, [R0]    ; Escreve no regist
+  229 000000F0 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador DEN
-  229 000000F2         
-  230 000000F2         ; 7. Para habilitar resistor de pull-up interno, setar P
+  230 000000F2         
+  231 000000F2         ; 7. Para habilitar resistor de pull-up interno, setar P
                        UR para 1
-  231 000000F2 4871            LDR              R0, =GPIO_PORTJ_AHB_PUR_R ; End
+  232 000000F2 4863            LDR              R0, =GPIO_PORTJ_AHB_PUR_R ; End
                                                             ereço do PUR para 
                                                             a porta J
-  232 000000F4 F04F 010F       MOV              R1, #2_00001111 ; Habilita resi
-                                                            stores de pull-up p
-                                                            ara PJ0 e PJ1
-  233 000000F8 6001            STR              R1, [R0]    ; Escreve no regist
+  233 000000F4 F04F 0103       MOV              R1, #0x03   ; Bits 1:0 = 1 para
+                                                             habilitar os resis
+                                                            tores de pull-up
+  234 000000F8 6001            STR              R1, [R0]    ; Escreve no regist
                                                             rador PUR
-  234 000000FA         
-  235 000000FA E8BD 4007       POP              {R0, R1, R2, LR} ; Restaura os 
+  235 000000FA         
+  236 000000FA E8BD 4007       POP              {R0, R1, R2, LR} ; Restaura os 
                                                             registradores usado
                                                             s da pilha
-  236 000000FE 4770            BX               LR          ; Retorna da funç�
+  237 000000FE 4770            BX               LR          ; Retorna da funç�
                                                             �o
-  237 00000100         
-  238 00000100         ; ------------------------------------------------------
-                       -------------------------
-  239 00000100         ; Função PortA_Output
+  238 00000100         
 
 
 
 ARM Macro Assembler    Page 10 
 
 
-  240 00000100         ; Parâmetro de entrada: R0 --> Valor a ser escrito nos 
+  239 00000100         ; ------------------------------------------------------
+                       -------------------------
+  240 00000100         ; Função PortA_Output
+  241 00000100         ; Parâmetro de entrada: R0 --> Valor a ser escrito nos 
                        pinos PA7:PA4
-  241 00000100         ; Parâmetro de saída: Nenhum
-  242 00000100         PortA_Output
-  243 00000100 B506            PUSH             {R1, R2, LR}
-  244 00000102 496E            LDR              R1, =GPIO_PORTA_AHB_DATA_R ; Ca
+  242 00000100         ; Parâmetro de saída: Nenhum
+  243 00000100         PortA_Output
+  244 00000100 B506            PUSH             {R1, R2, LR}
+  245 00000102 4960            LDR              R1, =GPIO_PORTA_AHB_DATA_R ; Ca
                                                             rrega o endereço d
                                                             o registrador de da
                                                             dos da porta A
-  245 00000104 680A            LDR              R2, [R1]    ; Lê o valor atual
+  246 00000104 680A            LDR              R2, [R1]    ; Lê o valor atual
                                                              do registrador de 
                                                             dados
-  246 00000106 F022 02F0       BIC              R2, R2, #2_11110000 ; Limpa os 
+  247 00000106 F022 02F0       BIC              R2, R2, #2_11110000 ; Limpa os 
                                                             bits PA7:PA4 (0b111
                                                             10000)
-  247 0000010A EA42 0200       ORR              R2, R2, R0  ; Define os bits PA
+  248 0000010A EA42 0200       ORR              R2, R2, R0  ; Define os bits PA
                                                             7:PA4 com o valor d
                                                             e R0
-  248 0000010E 600A            STR              R2, [R1]    ; Escreve o valor a
+  249 0000010E 600A            STR              R2, [R1]    ; Escreve o valor a
                                                             tualizado no regist
                                                             rador de dados
-  249 00000110 E8BD 4006       POP              {R1, R2, LR}
-  250 00000114 4770            BX               LR          ; Retorna da funç�
+  250 00000110 E8BD 4006       POP              {R1, R2, LR}
+  251 00000114 4770            BX               LR          ; Retorna da funç�
                                                             �o
-  251 00000116         
-  252 00000116         ; ------------------------------------------------------
+  252 00000116         
+  253 00000116         ; ------------------------------------------------------
                        -------------------------
-  253 00000116         ; Função PortB_Output
-  254 00000116         ; Parâmetro de entrada: R0 --> Valor a ser escrito nos 
+  254 00000116         ; Função PortB_Output
+  255 00000116         ; Parâmetro de entrada: R0 --> Valor a ser escrito nos 
                        pinos PB5:PB4
-  255 00000116         ; Parâmetro de saída: Nenhum
-  256 00000116         PortB_Output
-  257 00000116 B506            PUSH             {R1, R2, LR}
-  258 00000118 4969            LDR              R1, =GPIO_PORTB_AHB_DATA_R ; Ca
+  256 00000116         ; Parâmetro de saída: Nenhum
+  257 00000116         PortB_Output
+  258 00000116 B506            PUSH             {R1, R2, LR}
+  259 00000118 495B            LDR              R1, =GPIO_PORTB_AHB_DATA_R ; Ca
                                                             rrega o endereço d
                                                             o registrador de da
                                                             dos da porta B
-  259 0000011A 680A            LDR              R2, [R1]    ; Lê o valor atual
+  260 0000011A 680A            LDR              R2, [R1]    ; Lê o valor atual
                                                              do registrador de 
                                                             dados
-  260 0000011C F022 0230       BIC              R2, R2, #2_00110000 ; Limpa os 
+  261 0000011C F022 0230       BIC              R2, R2, #2_00110000 ; Limpa os 
                                                             bits PB5:PB4 (0b001
                                                             10000)
-  261 00000120 EA42 0200       ORR              R2, R2, R0  ; Define os bits PB
+  262 00000120 EA42 0200       ORR              R2, R2, R0  ; Define os bits PB
                                                             5:PB4 com o valor d
                                                             e R0
-  262 00000124 600A            STR              R2, [R1]    ; Escreve o valor a
+  263 00000124 600A            STR              R2, [R1]    ; Escreve o valor a
                                                             tualizado no regist
                                                             rador de dados
-  263 00000126 E8BD 4006       POP              {R1, R2, LR}
-  264 0000012A 4770            BX               LR          ; Retorna da funç�
+  264 00000126 E8BD 4006       POP              {R1, R2, LR}
+  265 0000012A 4770            BX               LR          ; Retorna da funç�
                                                             �o
-  265 0000012C         
-  266 0000012C         ; ------------------------------------------------------
+  266 0000012C         
+  267 0000012C         ; ------------------------------------------------------
                        -------------------------
-  267 0000012C         ; Função PortK_Output
-  268 0000012C         ; Parâmetro de entrada: R0 --> Valor a ser escrito nos 
-                       pinos PQ3:PQ0
-  269 0000012C         ; Parâmetro de saída: Nenhum
+  268 0000012C         ; Função PortK_Output
 
 
 
 ARM Macro Assembler    Page 11 
 
 
-  270 0000012C         PortK_Output
-  271 0000012C B506            PUSH             {R1, R2, LR}
-  272 0000012E 4965            LDR              R1, =GPIO_PORTK_DATA_R ; Carreg
+  269 0000012C         ; Parâmetro de entrada: R0 --> Valor a ser escrito nos 
+                       pinos PQ3:PQ0
+  270 0000012C         ; Parâmetro de saída: Nenhum
+  271 0000012C         PortK_Output
+  272 0000012C B506            PUSH             {R1, R2, LR}
+  273 0000012E 4957            LDR              R1, =GPIO_PORTK_DATA_R ; Carreg
                                                             a o endereço do re
                                                             gistrador de dados 
                                                             da porta K
-  273 00000130 680A            LDR              R2, [R1]    ; Lê o valor atual
+  274 00000130 680A            LDR              R2, [R1]    ; Lê o valor atual
                                                              do registrador de 
                                                             dados
-  274 00000132 F022 02FF       BIC              R2, R2, #2_11111111 ; Limpa os 
+  275 00000132 F022 02FF       BIC              R2, R2, #2_11111111 ; Limpa os 
                                                             bits PK7:PK0 (0b111
                                                             11111)
-  275 00000136 EA42 0200       ORR              R2, R2, R0  ; Define os bits PK
+  276 00000136 EA42 0200       ORR              R2, R2, R0  ; Define os bits PK
                                                             7:PK0 com o valor d
                                                             e R0
-  276 0000013A 600A            STR              R2, [R1]    ; Escreve o valor a
+  277 0000013A 600A            STR              R2, [R1]    ; Escreve o valor a
                                                             tualizado no regist
                                                             rador de dados
-  277 0000013C E8BD 4006       POP              {R1, R2, LR}
-  278 00000140 4770            BX               LR          ; Retorna da funç�
+  278 0000013C E8BD 4006       POP              {R1, R2, LR}
+  279 00000140 4770            BX               LR          ; Retorna da funç�
                                                             �o
-  279 00000142         
-  280 00000142         ; ------------------------------------------------------
+  280 00000142         
+  281 00000142         ; ------------------------------------------------------
                        -------------------------
-  281 00000142         ; Função PortM_Output
-  282 00000142         ; Parâmetro de entrada: R0 --> Valor a ser escrito nos 
+  282 00000142         ; Função PortM_Output
+  283 00000142         ; Parâmetro de entrada: R0 --> Valor a ser escrito nos 
                        pinos PQ3:PQ0
-  283 00000142         ; Parâmetro de saída: Nenhum
-  284 00000142         PortM_Output
-  285 00000142 B506            PUSH             {R1, R2, LR}
-  286 00000144 4960            LDR              R1, =GPIO_PORTM_DATA_R ; Carreg
+  284 00000142         ; Parâmetro de saída: Nenhum
+  285 00000142         PortM_Output
+  286 00000142 B506            PUSH             {R1, R2, LR}
+  287 00000144 4952            LDR              R1, =GPIO_PORTM_DATA_R ; Carreg
                                                             a o endereço do re
                                                             gistrador de dados 
                                                             da porta M
-  287 00000146 680A            LDR              R2, [R1]    ; Lê o valor atual
+  288 00000146 680A            LDR              R2, [R1]    ; Lê o valor atual
                                                              do registrador de 
                                                             dados
-  288 00000148 F022 0207       BIC              R2, R2, #2_00000111 ; Limpa os 
+  289 00000148 F022 0207       BIC              R2, R2, #2_00000111 ; Limpa os 
                                                             bits PM2:PM0 (0b000
                                                             00111)
-  289 0000014C EA42 0200       ORR              R2, R2, R0  ; Define os bits PM
+  290 0000014C EA42 0200       ORR              R2, R2, R0  ; Define os bits PM
                                                             2:PM0 com o valor d
                                                             e R0
-  290 00000150 600A            STR              R2, [R1]    ; Escreve o valor a
+  291 00000150 600A            STR              R2, [R1]    ; Escreve o valor a
                                                             tualizado no regist
                                                             rador de dados
-  291 00000152 E8BD 4006       POP              {R1, R2, LR}
-  292 00000156 4770            BX               LR          ; Retorna da funç�
+  292 00000152 E8BD 4006       POP              {R1, R2, LR}
+  293 00000156 4770            BX               LR          ; Retorna da funç�
                                                             �o
-  293 00000158         
-  294 00000158         ; ------------------------------------------------------
+  294 00000158         
+  295 00000158         ; ------------------------------------------------------
                        -------------------------
-  295 00000158         ; Função PortQ_Output
-  296 00000158         ; Parâmetro de entrada: R0 --> Valor a ser escrito nos 
+  296 00000158         ; Função PortQ_Output
+  297 00000158         ; Parâmetro de entrada: R0 --> Valor a ser escrito nos 
                        pinos PQ3:PQ0
-  297 00000158         ; Parâmetro de saída: Nenhum
-  298 00000158         PortQ_Output
-  299 00000158 B506            PUSH             {R1, R2, LR}
-  300 0000015A 495C            LDR              R1, =GPIO_PORTQ_DATA_R ; Carreg
+  298 00000158         ; Parâmetro de saída: Nenhum
 
 
 
 ARM Macro Assembler    Page 12 
 
 
+  299 00000158         PortQ_Output
+  300 00000158 B506            PUSH             {R1, R2, LR}
+  301 0000015A 494E            LDR              R1, =GPIO_PORTQ_DATA_R ; Carreg
                                                             a o endereço do re
                                                             gistrador de dados 
                                                             da porta Q
-  301 0000015C 680A            LDR              R2, [R1]    ; Lê o valor atual
+  302 0000015C 680A            LDR              R2, [R1]    ; Lê o valor atual
                                                              do registrador de 
                                                             dados
-  302 0000015E F022 020F       BIC              R2, R2, #2_00001111 ; Limpa os 
+  303 0000015E F022 020F       BIC              R2, R2, #2_00001111 ; Limpa os 
                                                             bits PQ3:PQ0 (0b000
                                                             01111)
-  303 00000162 EA42 0200       ORR              R2, R2, R0  ; Define os bits PQ
+  304 00000162 EA42 0200       ORR              R2, R2, R0  ; Define os bits PQ
                                                             3:PQ0 com o valor d
                                                             e R0
-  304 00000166 600A            STR              R2, [R1]    ; Escreve o valor a
+  305 00000166 600A            STR              R2, [R1]    ; Escreve o valor a
                                                             tualizado no regist
                                                             rador de dados
-  305 00000168 E8BD 4006       POP              {R1, R2, LR}
-  306 0000016C 4770            BX               LR          ; Retorna da funç�
+  306 00000168 E8BD 4006       POP              {R1, R2, LR}
+  307 0000016C 4770            BX               LR          ; Retorna da funç�
                                                             �o
-  307 0000016E         
-  308 0000016E         ; ------------------------------------------------------
+  308 0000016E         
+  309 0000016E         ; ------------------------------------------------------
                        -------------------------
-  309 0000016E         ; Função GPIOPortJ_Init
-  310 0000016E         ; Configura PJ0 e PJ1 como pinos de interrupção
-  311 0000016E         GPIOPortJ_Init
-  312 0000016E B50F            PUSH             {R0, R1, R2, R3, LR}
-  313 00000170         
-  314 00000170         ; PASSO 1 - Configura o registrador de máscara de inter
-                       rupção (IM) para a porta J
-  315 00000170 4A57            LDR              R2, =GPIO_PORTJ_AHB_IM_R ; Carr
-                                                            ega o endereço do 
-                                                            registrador IM da p
-                                                            orta J
-  316 00000172 6811            LDR              R1, [R2]    ; Lê o valor do re
-                                                            gistrador IM
-  317 00000174 F021 0103       BIC              R1, R1, #2_00000011 ; Limpa os 
-                                                            bits correspondente
-                                                            s a J0 e J1 (0b0000
-                                                            0011)
-  318 00000178 F041 0100       ORR              R1, R1, #2_00 ; Desabilitar tod
-                                                            as as interrupçõe
-                                                            s em J0 e J1
-  319 0000017C 6011            STR              R1, [R2]    ; Escreve o valor n
-                                                            o registrador IM
-  320 0000017E         
-  321 0000017E         ; PASSO 2 - Configura o registrador de detecção de bor
+  310 0000016E         ; Função GPIOPortJ_Init
+  311 0000016E         ; Inicializa a porta J para interrupções
+  312 0000016E         ; Parâmetro de entrada: Não tem
+  313 0000016E         ; Parâmetro de saída: Não tem
+  314 0000016E         GPIOPortJ_Init
+  315 0000016E B503            PUSH             {R0, R1, LR}
+  316 00000170         ; PASSO 1 - Desabilitar interrupções
+  317 00000170 F04F 0100       MOV              R1, #0x00   ; Limpa os bits de 
+                                                            interrupção = 0
+  318 00000174 4848            LDR              R0, =GPIO_PORTJ_AHB_IM_R ; Ende
+                                                            reço do registrado
+                                                            r IM para a porta J
+                                                            
+  319 00000176 6001            STR              R1, [R0]    ; Escreve no regist
+                                                            rador IM
+  320 00000178         
+  321 00000178         ; PASSO 2 - Configura o registrador de detecção de bor
                        da (IS) para a porta J
-  322 0000017E 4855            LDR              R0, =GPIO_PORTJ_AHB_IS_R ; Carr
-                                                            ega o endereço do 
-                                                            registrador IS da p
-                                                            orta J
-  323 00000180 6801            LDR              R1, [R0]    ; Lê o valor do re
-                                                            gistrador IS
-  324 00000182 F021 0103       BIC              R1, R1, #2_00000011 ; Limpa os 
-                                                            bits correspondente
-                                                            s a J0 e J1 (0b0000
-                                                            0011)
-  325 00000186 F041 0100       ORR              R1, R1, #2_00 ; Detecção de b
-                                                            orda (0 = detecçã
-                                                            o de borda)
+  322 00000178 F04F 0100       MOV              R1, #0x00   ; Configura o modo 
+                                                            de detecção de bo
+                                                            rda = 0
+  323 0000017C 4847            LDR              R0, =GPIO_PORTJ_AHB_IS_R ; Ende
+                                                            reço do registrado
+                                                            r IS para a porta J
+                                                            
+  324 0000017E 6001            STR              R1, [R0]    ; Escreve no regist
+                                                            rador IS
+  325 00000180         
+  326 00000180         ; PASSO 3.A - Configura o registrador de detecção de b
+                       orda única (IBE) para a porta J
+  327 00000180 F04F 0100       MOV              R1, #0x00   ; Configura o modo 
+                                                            de detecção de bo
+                                                            rda única = 0
+  328 00000184 4846            LDR              R0, =GPIO_PORTJ_AHB_IBE_R ; End
+                                                            ereço do registrad
 
 
 
 ARM Macro Assembler    Page 13 
 
 
-  326 0000018A 6001            STR              R1, [R0]    ; Escreve o valor n
-                                                            o registrador IS (0
-                                                             = detecção de bo
-                                                            rda)
-  327 0000018C         
-  328 0000018C         ; PASSO 3.A - Configura o registrador de detecção de b
-                       orda dupla (IBE) para a porta J
-  329 0000018C 4852            LDR              R0, =GPIO_PORTJ_AHB_IBE_R ; Car
-                                                            rega o endereço do
-                                                             registrador IBE da
-                                                             porta J
-  330 0000018E 6801            LDR              R1, [R0]    ; Lê o valor do re
-                                                            gistrador IBE
-  331 00000190 F021 0103       BIC              R1, R1, #2_00000011 ; Limpa os 
-                                                            bits correspondente
-                                                            s a J0 e J1 (0b0000
-                                                            0011)
-  332 00000194 F041 0100       ORR              R1, R1, #2_00 ; Borda única (0
-                                                             = borda única)
-  333 00000198 6001            STR              R1, [R0]    ; Escreve o valor n
-                                                            o registrador IBE (
-                                                            0 = borda única)
-  334 0000019A         
-  335 0000019A         ; PASSO 3.B - Configuração borda IEV para a porta J al
+                                                            or IBE para a porta
+                                                             J
+  329 00000186 6001            STR              R1, [R0]    ; Escreve no regist
+                                                            rador IBE
+  330 00000188         
+  331 00000188         ; PASSO 3.B - Configuração borda IEV para a porta J al
                        ternativa
-  336 0000019A 4850            LDR              R0, =GPIO_PORTJ_AHB_IEV_R ; Car
-                                                            rega o endereço do
-                                                             registrador IEV da
-                                                             porta J
-  337 0000019C 6801            LDR              R1, [R0]    ; Lê o valor do re
-                                                            gistrador IEV
-  338 0000019E F021 0103       BIC              R1, R1, #0x03 ; Limpa os bits c
-                                                            orrespondentes a J0
-                                                             e J1 (0b00000011)
-  339 000001A2 6001            STR              R1, [R0]    ; Detecção de bor
-                                                            da de descida (0 = 
-                                                            borda de descida)
-  340 000001A4         
-  341 000001A4         ; PASSO 4 - Limpa as interrupções pendentes no registr
+  332 00000188 F04F 0100       MOV              R1, #0x00   ; Configura o modo 
+                                                            de detecção de bo
+                                                            rda de descida = 0
+  333 0000018C 4845            LDR              R0, =GPIO_PORTJ_AHB_IEV_R ; End
+                                                            ereço do registrad
+                                                            or IEV para a porta
+                                                             J
+  334 0000018E 6001            STR              R1, [R0]    ; Escreve no regist
+                                                            rador IEV
+  335 00000190         
+  336 00000190         ; PASSO 4 - Limpa as interrupções pendentes no registr
                        ador ICR
-  342 000001A4 484E            LDR              R0, =GPIO_PORTJ_AHB_ICR_R ; Car
-                                                            rega o endereço do
-                                                             registrador ICR da
-                                                             porta J
-  343 000001A6 6801            LDR              R1, [R0]    ; Lê o valor do re
-                                                            gistrador ICR
-  344 000001A8 F021 0103       BIC              R1, R1, #2_00000011 ; Limpa os 
-                                                            bits correspondente
-                                                            s a J0 e J1 (0b0000
-                                                            0011)
-  345 000001AC F041 0103       ORR              R1, R1, #2_11 ; Limpa as interr
-                                                            upções pendentes 
-                                                            em J0 e J1 (1 = ACK
-                                                            )
-  346 000001B0 6001            STR              R1, [R0]    ; Escreve o valor n
-                                                            o registrador ICR
-  347 000001B2         
-  348 000001B2         ; PASSO 5 - Habilita as interrupções no registrador IM
+  337 00000190 F04F 0103       MOV              R1, #0x03   ; Limpa as interrup
+                                                            ções de PJ0 e PJ1
+                                                             = 1
+  338 00000194 4844            LDR              R0, =GPIO_PORTJ_AHB_ICR_R ; End
+                                                            ereço do registrad
+                                                            or ICR para a porta
+                                                             J
+  339 00000196 6001            STR              R1, [R0]    ; Escreve no regist
+                                                            rador ICR
+  340 00000198         
+  341 00000198         ; PASSO 5 - Habilita as interrupções no registrador IM
                        
+  342 00000198 F04F 0103       MOV              R1, #0x03   ; Habilita as inter
+                                                            rupções de PJ0 e 
+                                                            PJ1 = 1
+  343 0000019C 483E            LDR              R0, =GPIO_PORTJ_AHB_IM_R ; Ende
+                                                            reço do registrado
+                                                            r IM para a porta J
+                                                            
+  344 0000019E 6001            STR              R1, [R0]    ; Escreve no regist
+                                                            rador IM
+  345 000001A0         
+  346 000001A0         ; PASSO 6 - Configura o registrador NVIC para habilitar 
+                       a interrupção da porta J
+  347 000001A0 F04F 0101       MOV              R1, #1      ; Habilita a interr
+                                                            upção da porta J 
+                                                            = 1
+  348 000001A4 EA4F 41C1       LSL              R1, #19     ; Desloca 19 bits p
+                                                            ara a esquerda para
+                                                             o bit correto
+  349 000001A8 4840            LDR              R0, =NVIC_EN1_R ; Endereço do 
+                                                            registrador NVIC_EN
+                                                            1
+  350 000001AA 6001            STR              R1, [R0]    ; Escreve no regist
+                                                            rador NVIC_EN1
+  351 000001AC         
+  352 000001AC         ; PASSO 7.B - Configura a prioridade da interrupção no
+                        registrador NVIC_PRI12
+  353 000001AC F04F 0105       MOV              R1, #5      ; Define a priorida
+                                                            de da interrupção
 
 
 
 ARM Macro Assembler    Page 14 
 
 
-  349 000001B2 4847            LDR              R0, =GPIO_PORTJ_AHB_IM_R ; Carr
-                                                            ega o endereço do 
-                                                            registrador GPIOIM 
-                                                            da porta J
-  350 000001B4 6811            LDR              R1, [R2]    ; Lê o valor do re
-                                                            gistrador IM
-  351 000001B6 F021 0103       BIC              R1, R1, #2_00000011 ; Limpa os 
-                                                            bits correspondente
-                                                            s a J0 e J1 (0b0000
-                                                            0011)
-  352 000001BA F041 0103       ORR              R1, R1, #2_11 ; Habilita as int
-                                                            errupções em J0 e
-                                                             J1 (1 = habilitado
-                                                            )
-  353 000001BE 6011            STR              R1, [R2]    ; Escreve o valor n
-                                                            o registrador IM
-  354 000001C0         
-  355 000001C0         ; PASSO 6 - Configura o registrador NVIC para habilitar 
-                       a interrupção da porta J
-  356 000001C0 4848            LDR              R0, =NVIC_EN1_R ; Carrega o end
-                                                            ereço do registrad
-                                                            or NVIC_EN1
-  357 000001C2 6801            LDR              R1, [R0]    ; Lê o valor do re
-                                                            gistrador NVIC_EN1
-  358 000001C4 F04F 0201       MOV              R2, #2_1    ; Define o bit corr
-                                                            espondente à inter
-                                                            rupção da porta J
-                                                            
-  359 000001C8 EA4F 42C2       LSL              R2, #19     ; Desloca o valor p
-                                                            ara a posição cor
-                                                            reta
-  360 000001CC EA21 0102       BIC              R1, R1, R2  ; Limpa o bit corre
-                                                            spondente à interr
-                                                            upção da porta J
-  361 000001D0 EA41 0102       ORR              R1, R1, R2  ; Habilita a interr
-                                                            upção da porta J
-  362 000001D4 6001            STR              R1, [R0]    ; Escreve o valor n
+                                                             = 5
+  354 000001B0 EA4F 7141       LSL              R1, #29     ; Desloca 29 bits p
+                                                            ara a esquerda para
+                                                             o bit correto
+  355 000001B4 483E            LDR              R0, =NVIC_PRI12_R ; Endereço d
                                                             o registrador NVIC_
-                                                            EN1
-  363 000001D6         
-  364 000001D6         ; PASSO 7.B - Configura a prioridade da interrupção no
-                        registrador NVIC_PRI12
-  365 000001D6 4844            LDR              R0, =NVIC_PRI12_R ; Carrega o e
-                                                            ndereço do registr
-                                                            ador NVIC_PRI12
-  366 000001D8 6801            LDR              R1, [R0]    ; Lê o valor do re
-                                                            gistrador NVIC_PRI1
-                                                            2
-  367 000001DA F04F 0301       MOV              R3, #2_1    ; Bit para habilita
-                                                            r
-  368 000001DE EA4F 7343       LSL              R3, #29     ; Desloca o valor p
-                                                            ara a posição cor
-                                                            reta
-  369 000001E2 EA21 0103       BIC              R1, R1, R3  ; Limpa os bits cor
-                                                            respondentes à pri
-                                                            oridade da interrup
-                                                            ção
-  370 000001E6 F04F 0205       MOV              R2, #5      ; Define a priorida
-                                                            de da interrupção
+                                                            PRI12
+  356 000001B6 6001            STR              R1, [R0]    ; Escreve no regist
+                                                            rador NVIC_PRI12
+  357 000001B8         
+  358 000001B8 E8BD 4003       POP              {R0, R1, LR}
+  359 000001BC 4770            BX               LR
+  360 000001BE         
+  361 000001BE         ; ------------------------------------------------------
+                       -------------------------
+  362 000001BE         ; Função GPIOPortJ_Handler
+  363 000001BE         ; Interrupção da porta J (PJ0 e PJ1)
+  364 000001BE         ; Parâmetro de entrada: Não tem
+  365 000001BE         ; Parâmetro de saída: Não tem
+  366 000001BE         GPIOPortJ_Handler
+  367 000001BE B503            PUSH             {R0,R1,LR}
+  368 000001C0 483C            LDR              R0, =GPIO_PORTJ_AHB_RIS_R ; End
+                                                            ereço do RIS para 
+                                                            a porta J
+  369 000001C2 6801            LDR              R1, [R0]    ; Lê o valor do re
+                                                            gistrador de interr
+                                                            upção
+  370 000001C4         
+  371 000001C4         VerificaJ0
+  372 000001C4 F011 0F01       TST              R1, #0x01   ; Verifica se PJ0 g
+                                                            erou interrupção 
+                                                            (bit 0)
+  373 000001C8 D009            BEQ              VerificaJ1  ; Se não, verifica
+                                                             PJ1
+  374 000001CA         
+  375 000001CA         ; Lógica para PJ0
+  376 000001CA 4837            LDR              R0, =GPIO_PORTJ_AHB_ICR_R ; End
+                                                            ereço do ICR para 
+                                                            a porta J
+  377 000001CC F04F 0101       MOV              R1, #0x01   ; Limpa a interrup�
+                                                            �ão de PJ0
+  378 000001D0 6001            STR              R1, [R0]    ; Limpa a interrup�
+                                                            �ão de PJ0
+  379 000001D2 F105 0501       ADD              R5, R5, #1  ; Incrementa o pass
+                                                            o
+  380 000001D6 2D0A            CMP              R5, #10     ; Verifica se o pas
+                                                            so é maior que 10
+  381 000001D8 BFA8            IT               GE          ; Se for maior ou i
+                                                            gual a 10, reinicia
+                                                             o passo
+  382 000001DA 3D0A            SUBGE            R5, R5, #10 ; Reinicia o passo 
+                                                            para 0
+  383 000001DC E00C            B                Fim_Ver     ; Sai da verificaç
+                                                            ão de interrupçã
+                                                            o
+  384 000001DE         
+  385 000001DE         VerificaJ1
+  386 000001DE 4835            LDR              R0, =GPIO_PORTJ_AHB_RIS_R ; End
+                                                            ereço do RIS para 
 
 
 
 ARM Macro Assembler    Page 15 
 
 
-                                                            
-  371 000001EA EA4F 7242       LSL              R2, #29     ; Desloca o valor p
-                                                            ara a posição cor
-                                                            reta
-  372 000001EE EA41 0102       ORR              R1, R1, R2  ; Habilita a priori
-                                                            dade da interrupç�
-                                                            �o
-  373 000001F2 6001            STR              R1, [R0]    ; Escreve o valor n
-                                                            o registrador NVIC_
-                                                            PRI12
-  374 000001F4         
-  375 000001F4         ; Retorna da função
-  376 000001F4 E8BD 400F       POP              {R0, R1, R2, R3, LR} ; Restaura
-                                                             os registradores d
-                                                            a pilha
-  377 000001F8 4770            BX               LR          ; Retorna para o ch
-                                                            amador
-  378 000001FA         
-  379 000001FA         ; ------------------------------------------------------
-                       -------------------------
-  380 000001FA         ; Função GPIOPortJ_Handler Alternativa
-  381 000001FA         ; Gerencia interrupções em PJ0 e PJ1, limpando flags
-  382 000001FA         
-  383 000001FA         GPIOPortJ_Handler
-  384 000001FA B503            PUSH             {R0, R1, LR}
-  385 000001FC 483B            LDR              R0, =GPIO_PORTJ_AHB_RIS_R ; Car
-                                                            rega o registrador 
-                                                            RIS
-  386 000001FE 6801            LDR              R1, [R0]    ; Lê o estado das 
-                                                            interrupções
-  387 00000200         
-  388 00000200         VerificaJ0
-  389 00000200 F011 0F01       TST              R1, #0x01   ; Verifica se PJ0 g
-                                                            erou interrupção 
-                                                            (bit 0)
-  390 00000204 D009            BEQ              VerificaJ1
-  391 00000206         ; Lógica para PJ0
-  392 00000206 4836            LDR              R0, =GPIO_PORTJ_AHB_ICR_R
-  393 00000208 F04F 0101       MOV              R1, #0x01   ; Limpa a interrup�
-                                                            �ão de PJ0
-  394 0000020C 6001            STR              R1, [R0]
-  395 0000020E F105 0501       ADD              R5, R5, #1  ; Incrementa o pass
-                                                            o
-  396 00000212 2D0A            CMP              R5, #10
-  397 00000214 BFA8            IT               GE
-  398 00000216 3D0A            SUBGE            R5, R5, #10
-  399 00000218 E00A            B                Fim_Ver
-  400 0000021A         
-  401 0000021A         VerificaJ1
-  402 0000021A F011 0F02       TST              R1, #0x02   ; Verifica se PJ1 g
+                                                            a porta J
+  387 000001E0 6801            LDR              R1, [R0]    ; Lê o valor do re
+                                                            gistrador de interr
+                                                            upção
+  388 000001E2 F011 0F02       TST              R1, #0x02   ; Verifica se PJ1 g
                                                             erou interrupção 
                                                             (bit 1)
-  403 0000021E D007            BEQ              Fim_Ver
-  404 00000220         ; Lógica para PJ1
-  405 00000220 482F            LDR              R0, =GPIO_PORTJ_AHB_ICR_R
-  406 00000222 F04F 0102       MOV              R1, #0x02   ; Limpa a interrup�
+  389 000001E6 D007            BEQ              Fim_Ver     ; Se não, sai da v
+                                                            erificação
+  390 000001E8         
+  391 000001E8         ; Lógica para PJ1
+  392 000001E8 482F            LDR              R0, =GPIO_PORTJ_AHB_ICR_R ; End
+                                                            ereço do ICR para 
+                                                            a porta J
+  393 000001EA F04F 0102       MOV              R1, #0x02   ; Limpa a interrup�
                                                             �ão de PJ1
-  407 00000226 6001            STR              R1, [R0]
-  408 00000228 2E00            CMP              R6, #0
-
-
-
-ARM Macro Assembler    Page 16 
-
-
-  409 0000022A BF0C            ITE              EQ
-  410 0000022C 2601            MOVEQ            R6, #1      ; Alterna o modo
-  411 0000022E 2600            MOVNE            R6, #0
-  412 00000230         
-  413 00000230         Fim_Ver
-  414 00000230 E8BD 4003       POP              {R0, R1, LR}
-  415 00000234 4770            BX               LR
-  416 00000236         ; ------------------------------------------------------
+  394 000001EE 6001            STR              R1, [R0]    ; Limpa a interrup�
+                                                            �ão de PJ1
+  395 000001F0 2E00            CMP              R6, #0      ; Verifica o modo a
+                                                            tual (crescente ou 
+                                                            decrescente)
+  396 000001F2 BF0C            ITE              EQ          ; Se for crescente,
+                                                             muda para decresce
+                                                            nte, e vice-versa
+  397 000001F4 2601            MOVEQ            R6, #1      ; Alterna o modo
+  398 000001F6 2600            MOVNE            R6, #0      ; Alterna o modo
+  399 000001F8         
+  400 000001F8         Fim_Ver
+  401 000001F8 6001            STR              R1, [R0]    ; Salva no registra
+                                                            dor
+  402 000001FA E8BD 4003       POP              {R0, R1, LR} ; Restaura os regi
+                                                            stradores R0, R1 e 
+                                                            LR da pilha
+  403 000001FE 4770            BX               LR
+  404 00000200         
+  405 00000200         ; ------------------------------------------------------
                        --------------------------------------------------------
                        -----------
-  417 00000236         ; Fim do Arquivo
-  418 00000236         ; ------------------------------------------------------
+  406 00000200         ; Fim do Arquivo
+  407 00000200         ; ------------------------------------------------------
                        --------------------------------------------------------
-                       ----------- 
-  419 00000236 00 00           ALIGN                        ; Garante que o fim
+                       -----------
+  408 00000200                 ALIGN                        ; Garante que o fim
                                                              da seção está a
                                                             linhado
-  420 00000238                 END                          ; Fim do arquivo
+  409 00000200                 END                          ; Fim do arquivo
               400FE608 
               400FEA08 
               40058528 
@@ -1010,6 +973,12 @@ ARM Macro Assembler    Page 16
               4006052C 
               4006152C 
               4006352C 
+
+
+
+ARM Macro Assembler    Page 16 
+
+
               4006652C 
               40058400 
               40059400 
@@ -1038,12 +1007,6 @@ ARM Macro Assembler    Page 16
               40060410 
               40060404 
               40060408 
-
-
-
-ARM Macro Assembler    Page 17 
-
-
               4006040C 
               4006041C 
               E000E104 
@@ -1072,40 +1035,40 @@ EsperaGPIO 00000020
 
 Symbol: EsperaGPIO
    Definitions
-      At line 117 in file gpio.s
+      At line 118 in file gpio.s
    Uses
-      At line 126 in file gpio.s
+      At line 127 in file gpio.s
 Comment: EsperaGPIO used once
-Fim_Ver 00000230
+Fim_Ver 000001F8
 
 Symbol: Fim_Ver
    Definitions
-      At line 413 in file gpio.s
+      At line 400 in file gpio.s
    Uses
-      At line 399 in file gpio.s
-      At line 403 in file gpio.s
+      At line 383 in file gpio.s
+      At line 389 in file gpio.s
 
-GPIOPortJ_Handler 000001FA
+GPIOPortJ_Handler 000001BE
 
 Symbol: GPIOPortJ_Handler
    Definitions
-      At line 383 in file gpio.s
+      At line 366 in file gpio.s
    Uses
-      At line 90 in file gpio.s
+      At line 96 in file gpio.s
 Comment: GPIOPortJ_Handler used once
 GPIOPortJ_Init 0000016E
 
 Symbol: GPIOPortJ_Init
    Definitions
-      At line 311 in file gpio.s
+      At line 314 in file gpio.s
    Uses
-      None
-Comment: GPIOPortJ_Init unused
+      At line 95 in file gpio.s
+Comment: GPIOPortJ_Init used once
 GPIO_Init 00000000
 
 Symbol: GPIO_Init
    Definitions
-      At line 101 in file gpio.s
+      At line 102 in file gpio.s
    Uses
       At line 89 in file gpio.s
 Comment: GPIO_Init used once
@@ -1113,9 +1076,9 @@ PortA_Output 00000100
 
 Symbol: PortA_Output
    Definitions
-      At line 242 in file gpio.s
+      At line 243 in file gpio.s
    Uses
-      At line 91 in file gpio.s
+      At line 90 in file gpio.s
 Comment: PortA_Output used once
 PortB_Output 00000116
 
@@ -1127,49 +1090,49 @@ Relocatable symbols
 
 Symbol: PortB_Output
    Definitions
-      At line 256 in file gpio.s
+      At line 257 in file gpio.s
    Uses
-      At line 92 in file gpio.s
+      At line 91 in file gpio.s
 Comment: PortB_Output used once
 PortK_Output 0000012C
 
 Symbol: PortK_Output
    Definitions
-      At line 270 in file gpio.s
+      At line 271 in file gpio.s
    Uses
-      At line 93 in file gpio.s
+      At line 92 in file gpio.s
 Comment: PortK_Output used once
 PortM_Output 00000142
 
 Symbol: PortM_Output
    Definitions
-      At line 284 in file gpio.s
+      At line 285 in file gpio.s
    Uses
-      At line 94 in file gpio.s
+      At line 93 in file gpio.s
 Comment: PortM_Output used once
 PortQ_Output 00000158
 
 Symbol: PortQ_Output
    Definitions
-      At line 298 in file gpio.s
+      At line 299 in file gpio.s
    Uses
-      At line 95 in file gpio.s
+      At line 94 in file gpio.s
 Comment: PortQ_Output used once
-VerificaJ0 00000200
+VerificaJ0 000001C4
 
 Symbol: VerificaJ0
    Definitions
-      At line 388 in file gpio.s
+      At line 371 in file gpio.s
    Uses
       None
 Comment: VerificaJ0 unused
-VerificaJ1 0000021A
+VerificaJ1 000001DE
 
 Symbol: VerificaJ1
    Definitions
-      At line 401 in file gpio.s
+      At line 385 in file gpio.s
    Uses
-      At line 390 in file gpio.s
+      At line 373 in file gpio.s
 Comment: VerificaJ1 used once
 13 symbols
 
@@ -1200,8 +1163,8 @@ Symbol: GPIO_PORTA
    Definitions
       At line 27 in file gpio.s
    Uses
-      At line 108 in file gpio.s
-      At line 119 in file gpio.s
+      At line 109 in file gpio.s
+      At line 120 in file gpio.s
 
 GPIO_PORTA_AHB_AFSEL_R 40058420
 
@@ -1209,7 +1172,7 @@ Symbol: GPIO_PORTA_AHB_AFSEL_R
    Definitions
       At line 24 in file gpio.s
    Uses
-      At line 192 in file gpio.s
+      At line 193 in file gpio.s
 Comment: GPIO_PORTA_AHB_AFSEL_R used once
 GPIO_PORTA_AHB_AMSEL_R 40058528
 
@@ -1217,7 +1180,7 @@ Symbol: GPIO_PORTA_AHB_AMSEL_R
    Definitions
       At line 21 in file gpio.s
    Uses
-      At line 130 in file gpio.s
+      At line 131 in file gpio.s
 Comment: GPIO_PORTA_AHB_AMSEL_R used once
 GPIO_PORTA_AHB_DATA_R 400583FC
 
@@ -1225,7 +1188,7 @@ Symbol: GPIO_PORTA_AHB_DATA_R
    Definitions
       At line 26 in file gpio.s
    Uses
-      At line 244 in file gpio.s
+      At line 245 in file gpio.s
 Comment: GPIO_PORTA_AHB_DATA_R used once
 GPIO_PORTA_AHB_DEN_R 4005851C
 
@@ -1233,7 +1196,7 @@ Symbol: GPIO_PORTA_AHB_DEN_R
    Definitions
       At line 25 in file gpio.s
    Uses
-      At line 206 in file gpio.s
+      At line 207 in file gpio.s
 Comment: GPIO_PORTA_AHB_DEN_R used once
 GPIO_PORTA_AHB_DIR_R 40058400
 
@@ -1247,7 +1210,7 @@ Symbol: GPIO_PORTA_AHB_DIR_R
    Definitions
       At line 23 in file gpio.s
    Uses
-      At line 160 in file gpio.s
+      At line 161 in file gpio.s
 Comment: GPIO_PORTA_AHB_DIR_R used once
 GPIO_PORTA_AHB_PCTL_R 4005852C
 
@@ -1255,7 +1218,7 @@ Symbol: GPIO_PORTA_AHB_PCTL_R
    Definitions
       At line 22 in file gpio.s
    Uses
-      At line 145 in file gpio.s
+      At line 146 in file gpio.s
 Comment: GPIO_PORTA_AHB_PCTL_R used once
 GPIO_PORTB 00000002
 
@@ -1263,8 +1226,8 @@ Symbol: GPIO_PORTB
    Definitions
       At line 37 in file gpio.s
    Uses
-      At line 109 in file gpio.s
-      At line 120 in file gpio.s
+      At line 110 in file gpio.s
+      At line 121 in file gpio.s
 
 GPIO_PORTB_AHB_AFSEL_R 40059420
 
@@ -1272,7 +1235,7 @@ Symbol: GPIO_PORTB_AHB_AFSEL_R
    Definitions
       At line 33 in file gpio.s
    Uses
-      At line 194 in file gpio.s
+      At line 195 in file gpio.s
 Comment: GPIO_PORTB_AHB_AFSEL_R used once
 GPIO_PORTB_AHB_AMSEL_R 40059528
 
@@ -1280,7 +1243,7 @@ Symbol: GPIO_PORTB_AHB_AMSEL_R
    Definitions
       At line 30 in file gpio.s
    Uses
-      At line 132 in file gpio.s
+      At line 133 in file gpio.s
 Comment: GPIO_PORTB_AHB_AMSEL_R used once
 GPIO_PORTB_AHB_DATA_R 400593FC
 
@@ -1288,7 +1251,7 @@ Symbol: GPIO_PORTB_AHB_DATA_R
    Definitions
       At line 36 in file gpio.s
    Uses
-      At line 258 in file gpio.s
+      At line 259 in file gpio.s
 Comment: GPIO_PORTB_AHB_DATA_R used once
 GPIO_PORTB_AHB_DEN_R 4005951C
 
@@ -1296,7 +1259,7 @@ Symbol: GPIO_PORTB_AHB_DEN_R
    Definitions
       At line 34 in file gpio.s
    Uses
-      At line 210 in file gpio.s
+      At line 211 in file gpio.s
 Comment: GPIO_PORTB_AHB_DEN_R used once
 GPIO_PORTB_AHB_DIR_R 40059400
 
@@ -1310,7 +1273,7 @@ Absolute symbols
 
       At line 32 in file gpio.s
    Uses
-      At line 165 in file gpio.s
+      At line 166 in file gpio.s
 Comment: GPIO_PORTB_AHB_DIR_R used once
 GPIO_PORTB_AHB_PCTL_R 4005952C
 
@@ -1318,7 +1281,7 @@ Symbol: GPIO_PORTB_AHB_PCTL_R
    Definitions
       At line 31 in file gpio.s
    Uses
-      At line 147 in file gpio.s
+      At line 148 in file gpio.s
 Comment: GPIO_PORTB_AHB_PCTL_R used once
 GPIO_PORTB_AHB_PUR_R 40059510
 
@@ -1334,8 +1297,8 @@ Symbol: GPIO_PORTJ
    Definitions
       At line 52 in file gpio.s
    Uses
-      At line 110 in file gpio.s
-      At line 121 in file gpio.s
+      At line 111 in file gpio.s
+      At line 122 in file gpio.s
 
 GPIO_PORTJ_AHB_AFSEL_R 40060420
 
@@ -1343,7 +1306,7 @@ Symbol: GPIO_PORTJ_AHB_AFSEL_R
    Definitions
       At line 43 in file gpio.s
    Uses
-      At line 196 in file gpio.s
+      At line 197 in file gpio.s
 Comment: GPIO_PORTJ_AHB_AFSEL_R used once
 GPIO_PORTJ_AHB_AMSEL_R 40060528
 
@@ -1351,7 +1314,7 @@ Symbol: GPIO_PORTJ_AHB_AMSEL_R
    Definitions
       At line 40 in file gpio.s
    Uses
-      At line 134 in file gpio.s
+      At line 135 in file gpio.s
 Comment: GPIO_PORTJ_AHB_AMSEL_R used once
 GPIO_PORTJ_AHB_DEN_R 4006051C
 
@@ -1359,7 +1322,7 @@ Symbol: GPIO_PORTJ_AHB_DEN_R
    Definitions
       At line 44 in file gpio.s
    Uses
-      At line 214 in file gpio.s
+      At line 215 in file gpio.s
 Comment: GPIO_PORTJ_AHB_DEN_R used once
 GPIO_PORTJ_AHB_DIR_R 40060400
 
@@ -1373,7 +1336,7 @@ Symbol: GPIO_PORTJ_AHB_DIR_R
 ARM Macro Assembler    Page 4 Alphabetic symbol ordering
 Absolute symbols
 
-      At line 170 in file gpio.s
+      At line 171 in file gpio.s
 Comment: GPIO_PORTJ_AHB_DIR_R used once
 GPIO_PORTJ_AHB_IBE_R 40060408
 
@@ -1381,7 +1344,7 @@ Symbol: GPIO_PORTJ_AHB_IBE_R
    Definitions
       At line 49 in file gpio.s
    Uses
-      At line 329 in file gpio.s
+      At line 328 in file gpio.s
 Comment: GPIO_PORTJ_AHB_IBE_R used once
 GPIO_PORTJ_AHB_ICR_R 4006041C
 
@@ -1389,9 +1352,9 @@ Symbol: GPIO_PORTJ_AHB_ICR_R
    Definitions
       At line 47 in file gpio.s
    Uses
-      At line 342 in file gpio.s
+      At line 338 in file gpio.s
+      At line 376 in file gpio.s
       At line 392 in file gpio.s
-      At line 405 in file gpio.s
 
 GPIO_PORTJ_AHB_IEV_R 4006040C
 
@@ -1399,7 +1362,7 @@ Symbol: GPIO_PORTJ_AHB_IEV_R
    Definitions
       At line 50 in file gpio.s
    Uses
-      At line 336 in file gpio.s
+      At line 333 in file gpio.s
 Comment: GPIO_PORTJ_AHB_IEV_R used once
 GPIO_PORTJ_AHB_IM_R 40060410
 
@@ -1407,8 +1370,8 @@ Symbol: GPIO_PORTJ_AHB_IM_R
    Definitions
       At line 51 in file gpio.s
    Uses
-      At line 315 in file gpio.s
-      At line 349 in file gpio.s
+      At line 318 in file gpio.s
+      At line 343 in file gpio.s
 
 GPIO_PORTJ_AHB_IS_R 40060404
 
@@ -1416,7 +1379,7 @@ Symbol: GPIO_PORTJ_AHB_IS_R
    Definitions
       At line 48 in file gpio.s
    Uses
-      At line 322 in file gpio.s
+      At line 323 in file gpio.s
 Comment: GPIO_PORTJ_AHB_IS_R used once
 GPIO_PORTJ_AHB_PCTL_R 4006052C
 
@@ -1424,7 +1387,7 @@ Symbol: GPIO_PORTJ_AHB_PCTL_R
    Definitions
       At line 41 in file gpio.s
    Uses
-      At line 149 in file gpio.s
+      At line 150 in file gpio.s
 Comment: GPIO_PORTJ_AHB_PCTL_R used once
 GPIO_PORTJ_AHB_PUR_R 40060510
 
@@ -1438,7 +1401,7 @@ Symbol: GPIO_PORTJ_AHB_PUR_R
 ARM Macro Assembler    Page 5 Alphabetic symbol ordering
 Absolute symbols
 
-      At line 231 in file gpio.s
+      At line 232 in file gpio.s
 Comment: GPIO_PORTJ_AHB_PUR_R used once
 GPIO_PORTJ_AHB_RIS_R 40060414
 
@@ -1446,16 +1409,17 @@ Symbol: GPIO_PORTJ_AHB_RIS_R
    Definitions
       At line 46 in file gpio.s
    Uses
-      At line 385 in file gpio.s
-Comment: GPIO_PORTJ_AHB_RIS_R used once
+      At line 368 in file gpio.s
+      At line 386 in file gpio.s
+
 GPIO_PORTK 00000200
 
 Symbol: GPIO_PORTK
    Definitions
       At line 61 in file gpio.s
    Uses
-      At line 111 in file gpio.s
-      At line 122 in file gpio.s
+      At line 112 in file gpio.s
+      At line 123 in file gpio.s
 
 GPIO_PORTK_AFSEL_R 40061420
 
@@ -1463,7 +1427,7 @@ Symbol: GPIO_PORTK_AFSEL_R
    Definitions
       At line 58 in file gpio.s
    Uses
-      At line 198 in file gpio.s
+      At line 199 in file gpio.s
 Comment: GPIO_PORTK_AFSEL_R used once
 GPIO_PORTK_AMSEL_R 40061528
 
@@ -1471,7 +1435,7 @@ Symbol: GPIO_PORTK_AMSEL_R
    Definitions
       At line 55 in file gpio.s
    Uses
-      At line 136 in file gpio.s
+      At line 137 in file gpio.s
 Comment: GPIO_PORTK_AMSEL_R used once
 GPIO_PORTK_DATA_R 400613FC
 
@@ -1479,7 +1443,7 @@ Symbol: GPIO_PORTK_DATA_R
    Definitions
       At line 60 in file gpio.s
    Uses
-      At line 272 in file gpio.s
+      At line 273 in file gpio.s
 Comment: GPIO_PORTK_DATA_R used once
 GPIO_PORTK_DEN_R 4006151C
 
@@ -1487,7 +1451,7 @@ Symbol: GPIO_PORTK_DEN_R
    Definitions
       At line 59 in file gpio.s
    Uses
-      At line 218 in file gpio.s
+      At line 219 in file gpio.s
 Comment: GPIO_PORTK_DEN_R used once
 GPIO_PORTK_DIR_R 40061400
 
@@ -1495,21 +1459,21 @@ Symbol: GPIO_PORTK_DIR_R
    Definitions
       At line 57 in file gpio.s
    Uses
-      At line 175 in file gpio.s
-Comment: GPIO_PORTK_DIR_R used once
+      At line 176 in file gpio.s
 
 
 
 ARM Macro Assembler    Page 6 Alphabetic symbol ordering
 Absolute symbols
 
+Comment: GPIO_PORTK_DIR_R used once
 GPIO_PORTK_PCTL_R 4006152C
 
 Symbol: GPIO_PORTK_PCTL_R
    Definitions
       At line 56 in file gpio.s
    Uses
-      At line 151 in file gpio.s
+      At line 152 in file gpio.s
 Comment: GPIO_PORTK_PCTL_R used once
 GPIO_PORTM 00000800
 
@@ -1517,8 +1481,8 @@ Symbol: GPIO_PORTM
    Definitions
       At line 70 in file gpio.s
    Uses
-      At line 112 in file gpio.s
-      At line 123 in file gpio.s
+      At line 113 in file gpio.s
+      At line 124 in file gpio.s
 
 GPIO_PORTM_AFSEL_R 40063420
 
@@ -1526,7 +1490,7 @@ Symbol: GPIO_PORTM_AFSEL_R
    Definitions
       At line 67 in file gpio.s
    Uses
-      At line 200 in file gpio.s
+      At line 201 in file gpio.s
 Comment: GPIO_PORTM_AFSEL_R used once
 GPIO_PORTM_AMSEL_R 40063528
 
@@ -1534,7 +1498,7 @@ Symbol: GPIO_PORTM_AMSEL_R
    Definitions
       At line 64 in file gpio.s
    Uses
-      At line 138 in file gpio.s
+      At line 139 in file gpio.s
 Comment: GPIO_PORTM_AMSEL_R used once
 GPIO_PORTM_DATA_R 400633FC
 
@@ -1542,7 +1506,7 @@ Symbol: GPIO_PORTM_DATA_R
    Definitions
       At line 69 in file gpio.s
    Uses
-      At line 286 in file gpio.s
+      At line 287 in file gpio.s
 Comment: GPIO_PORTM_DATA_R used once
 GPIO_PORTM_DEN_R 4006351C
 
@@ -1550,7 +1514,7 @@ Symbol: GPIO_PORTM_DEN_R
    Definitions
       At line 68 in file gpio.s
    Uses
-      At line 222 in file gpio.s
+      At line 223 in file gpio.s
 Comment: GPIO_PORTM_DEN_R used once
 GPIO_PORTM_DIR_R 40063400
 
@@ -1558,21 +1522,21 @@ Symbol: GPIO_PORTM_DIR_R
    Definitions
       At line 66 in file gpio.s
    Uses
-      At line 180 in file gpio.s
+      At line 181 in file gpio.s
 Comment: GPIO_PORTM_DIR_R used once
 GPIO_PORTM_PCTL_R 4006352C
-
 
 
 
 ARM Macro Assembler    Page 7 Alphabetic symbol ordering
 Absolute symbols
 
+
 Symbol: GPIO_PORTM_PCTL_R
    Definitions
       At line 65 in file gpio.s
    Uses
-      At line 153 in file gpio.s
+      At line 154 in file gpio.s
 Comment: GPIO_PORTM_PCTL_R used once
 GPIO_PORTQ 00004000
 
@@ -1580,8 +1544,8 @@ Symbol: GPIO_PORTQ
    Definitions
       At line 79 in file gpio.s
    Uses
-      At line 113 in file gpio.s
-      At line 124 in file gpio.s
+      At line 114 in file gpio.s
+      At line 125 in file gpio.s
 
 GPIO_PORTQ_AFSEL_R 40066420
 
@@ -1589,7 +1553,7 @@ Symbol: GPIO_PORTQ_AFSEL_R
    Definitions
       At line 76 in file gpio.s
    Uses
-      At line 202 in file gpio.s
+      At line 203 in file gpio.s
 Comment: GPIO_PORTQ_AFSEL_R used once
 GPIO_PORTQ_AMSEL_R 40066528
 
@@ -1597,7 +1561,7 @@ Symbol: GPIO_PORTQ_AMSEL_R
    Definitions
       At line 73 in file gpio.s
    Uses
-      At line 140 in file gpio.s
+      At line 141 in file gpio.s
 Comment: GPIO_PORTQ_AMSEL_R used once
 GPIO_PORTQ_DATA_R 400663FC
 
@@ -1605,7 +1569,7 @@ Symbol: GPIO_PORTQ_DATA_R
    Definitions
       At line 78 in file gpio.s
    Uses
-      At line 300 in file gpio.s
+      At line 301 in file gpio.s
 Comment: GPIO_PORTQ_DATA_R used once
 GPIO_PORTQ_DEN_R 4006651C
 
@@ -1613,7 +1577,7 @@ Symbol: GPIO_PORTQ_DEN_R
    Definitions
       At line 77 in file gpio.s
    Uses
-      At line 226 in file gpio.s
+      At line 227 in file gpio.s
 Comment: GPIO_PORTQ_DEN_R used once
 GPIO_PORTQ_DIR_R 40066400
 
@@ -1621,21 +1585,21 @@ Symbol: GPIO_PORTQ_DIR_R
    Definitions
       At line 75 in file gpio.s
    Uses
-      At line 185 in file gpio.s
+      At line 186 in file gpio.s
 Comment: GPIO_PORTQ_DIR_R used once
 GPIO_PORTQ_PCTL_R 4006652C
 
 Symbol: GPIO_PORTQ_PCTL_R
-   Definitions
 
 
 
 ARM Macro Assembler    Page 8 Alphabetic symbol ordering
 Absolute symbols
 
+   Definitions
       At line 74 in file gpio.s
    Uses
-      At line 155 in file gpio.s
+      At line 156 in file gpio.s
 Comment: GPIO_PORTQ_PCTL_R used once
 NVIC_EN1_R E000E104
 
@@ -1643,7 +1607,7 @@ Symbol: NVIC_EN1_R
    Definitions
       At line 82 in file gpio.s
    Uses
-      At line 356 in file gpio.s
+      At line 349 in file gpio.s
 Comment: NVIC_EN1_R used once
 NVIC_PRI12_R E000E430
 
@@ -1651,7 +1615,7 @@ Symbol: NVIC_PRI12_R
    Definitions
       At line 83 in file gpio.s
    Uses
-      At line 365 in file gpio.s
+      At line 355 in file gpio.s
 Comment: NVIC_PRI12_R used once
 SYSCTL_PRGPIO_R 400FEA08
 
@@ -1659,7 +1623,7 @@ Symbol: SYSCTL_PRGPIO_R
    Definitions
       At line 16 in file gpio.s
    Uses
-      At line 116 in file gpio.s
+      At line 117 in file gpio.s
 Comment: SYSCTL_PRGPIO_R used once
 SYSCTL_RCGCGPIO_R 400FE608
 
@@ -1667,7 +1631,7 @@ Symbol: SYSCTL_RCGCGPIO_R
    Definitions
       At line 15 in file gpio.s
    Uses
-      At line 107 in file gpio.s
+      At line 108 in file gpio.s
 Comment: SYSCTL_RCGCGPIO_R used once
 55 symbols
 404 symbols in table

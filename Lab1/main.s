@@ -24,17 +24,17 @@ MS250_IN_US EQU 100000
 ; Área de Código - Tudo abaixo da diretiva a seguir será armazenado na memória de código
     AREA    |.text|, CODE, READONLY, ALIGN=2
 
-    ; Se alguma função do arquivo for chamada em outro arquivo	
+    ; Se alguma função do arquivo for chamada em outro arquivo
     EXPORT Start                ; Permite chamar a função Start a partir de outro arquivo. No caso startup.s
 
-    ; Se chamar alguma função externa	
+    ; Se chamar alguma função externa
     ;IMPORT <func>              ; Permite chamar dentro deste arquivo uma função <func>
     IMPORT PLL_Init
     IMPORT SysTick_Init
     IMPORT GPIO_Init
+    IMPORT GPIOPortJ_Init
     IMPORT LCD_Init
     IMPORT LCD_Display
-    IMPORT LCD_WriteNumber
     IMPORT Seg_Display
 
 ;-----------------------------------------------------------------
@@ -45,36 +45,32 @@ MS250_IN_US EQU 100000
 ; -------------------------------------------------------------------------------
 ; Função main()
 Start
-    BL PLL_Init        ; Configura clock para 80MHz
-    BL SysTick_Init    ; Inicializa SysTick
-    BL GPIO_Init       ; Geral GPIO (inclui PortJ_Init)
-    BL LCD_Init        ; Inicializa LCD
+    BL PLL_Init             ; Configura clock para 80MHz
+    BL SysTick_Init         ; Inicializa SysTick
+    BL GPIO_Init            ; Inicializa GPIOs
+    BL GPIOPortJ_Init	    ; Inicializa interrupções
+    BL LCD_Init             ; Inicializa LCD
+    MOV R5, #1              ; Passo inicial = 1
+    MOV R6, #0              ; Modo inicial = crescente
+    LDR R8, =MS250_IN_US    ; Tempo de contagem (100000 x 10us = 1s)
 
-    MOV R5, #1         ; Passo inicial = 1
-    MOV R6, #0         ; Modo inicial = crescente   
-    LDR R8, =MS250_IN_US ; Tempo de contagem (200000 x 5µs = 1s)
-; LoopTeste
-;  	MOV R0, #39
-;  	BL LCD_WriteNumber
-;     B LoopTeste
 MainLoop
-    MOV R7, #0         ; Cronômetro
+    MOV R7, #0              ; Cronômetro
 ShowOnDisplay
-    BL Seg_Display     ; Exibe número no display de 7 segmentos
-    ADD R7, R7, #1     ; Incrementa cronômetro
-    CMP R7, R8         ; Verifica se passou 1s
-    BLT ShowOnDisplay  ; Enquanto não passou 1s
-
-    ; Atualiza contador conforme modo
-    CMP R6, #0
+    BL Seg_Display          ; Exibe número no display de 7 segmentos
+    ADD R7, R7, #1          ; Incrementa cronômetro
+    CMP R7, R8              ; Verifica se passou 1s
+    BLT ShowOnDisplay       ; Enquanto não passou 1s mostra o mesmo número no display de 7 segmentos
+    BL LCD_Display          ; Atualiza display LCD
+    CMP R6, #0              ; Verifica o modo 0=crescente 1=decrescente
     BEQ DoIncrement
-    SUB R4, R4, R5     ; modo decrescente
+    SUB R4, R4, R5          ; Modo decrescente
     B CheckUnderflow
 DoIncrement
-    ADD R4, R4, R5     ; modo crescente
-    CMP R4, #100
+    ADD R4, R4, R5          ; Modo crescente
+    CMP R4, #99
     BLE ContinueLoop
-    SUB R4, R4, #100
+    MOV R4, #0              ; Se passou de 99, reinicia contagem
     B ContinueLoop
 
 CheckUnderflow
@@ -84,8 +80,9 @@ CheckUnderflow
 
 ContinueLoop
     B MainLoop
+	
 ; -------------------------------------------------------------------------------------------------------------------------
 ; Fim do Arquivo
-; -------------------------------------------------------------------------------------------------------------------------	
-    ALIGN                           ; Garante que o fim da seção está alinhado 
-    END                             ; Fim do arquivo
+; -------------------------------------------------------------------------------------------------------------------------
+    ALIGN   ; Garante que o fim da seção está alinhado
+    END     ; Fim do arquivo

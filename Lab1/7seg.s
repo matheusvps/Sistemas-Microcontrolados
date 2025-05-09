@@ -10,7 +10,7 @@
     AREA DATA, READONLY, ALIGN=2
     ; Se alguma variável for chamada em outro arquivo
     ;EXPORT  var [DATA,SIZE=tam]   ; Permite chamar a variável var a partir de outro arquivo
-;var	SPACE tam                     ; Declara uma variável de nome var de tam bytes a partir da primeira posição da RAM	
+;var	SPACE tam                     ; Declara uma variável de nome var de tam bytes a partir da primeira posição da RAM
 
 ; Tabela de segmentos para display de 7 segmentos
 D7SEG_TABELA
@@ -30,10 +30,10 @@ D7SEG_TABELA
 ; Área de Código - Tudo abaixo da diretiva a seguir será armazenado na memória de código
     AREA |.text|, CODE, READONLY, ALIGN=2
 
-    ; Se alguma função do arquivo for chamada em outro arquivo	
+    ; Se alguma função do arquivo for chamada em outro arquivo
     EXPORT Seg_Display ; Permite chamar a funçãoo Start a partir de outro arquivo. No caso startup.s
 
-    ; Se chamar alguma função externa	
+    ; Se chamar alguma função externa
     ;IMPORT <func>              ; Permite chamar dentro deste arquivo uma função <func>
     IMPORT SysTick_Wait1us
     IMPORT SysTick_Wait1ms
@@ -58,7 +58,7 @@ Seg_Display
     BL Extract_Digits        	; R1 = unidade, R2 = dezena
     LDR R3, =D7SEG_TABELA    	; Endereços dos segmentos para ativar
 
-;--- exibe a DEZENA (Q2) ---
+;--- Exibe a DEZENA (Q2) ---
     LDRB R0, [R3, R2]           ; R0 = padrão segmentos da dezena
     AND R0, R0, #2_00001111     ; Máscara para os 4 bits menos significativos
     BL PortQ_Output             ; Envia para o display de 7 segmentos
@@ -66,15 +66,15 @@ Seg_Display
     AND R0, R0, #2_11110000     ; Máscara para os 4 bits mais significativos
     BL PortA_Output             ; Envia para o display de 7 segmentos
     MOV R0, #2_00100000
-    BL PortB_Output             ; Envia para o transistor Q3 (dezena)
+    BL PortB_Output             ; Envia para o transistor Q
     MOV R0, #1                  ; 1 ms
     BL SysTick_Wait1us          ; Espera 10ms
-    MOV R0, #0                  
-    BL PortB_Output             ; Desliga Q3
+    MOV R0, #0
+    BL PortB_Output             ; Desliga Q2
     MOV R0, #1                  ; 1 ms
     BL SysTick_Wait1us          ; Espera 10ms
 
-;--- exibe a UNIDADE (Q1) ---
+;--- Exibe a UNIDADE (Q1) ---
     LDRB R0, [R3, R1]           ; R0 = padrão segmentos da dezena
     AND R0, R0, #2_00001111     ; Máscara para os 4 bits menos significativos
     BL PortQ_Output             ; Envia para o display de 7 segmentos
@@ -95,6 +95,6 @@ Seg_Display
 
 ; -------------------------------------------------------------------------------------------------------------------------
 ; Fim do Arquivo
-; -------------------------------------------------------------------------------------------------------------------------	
+; -------------------------------------------------------------------------------------------------------------------------
     ALIGN                       ; Garante que o fim da seção está alinhado
     END                         ; Fim do arquivo

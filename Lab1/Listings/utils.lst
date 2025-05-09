@@ -184,7 +184,7 @@ ARM Macro Assembler    Page 3
    73 0000000A         ; 2) Ligar o MOSC limpando o bit NOXTAL bit no registrad
                        or SYSCTL_MOSCCTL_R.
    74 0000000A         ; 3) Como o modo cristal é requerido, limpar o bit de P
-                       WRDN. O datasheet pede 
+                       WRDN. O datasheet pede
    75 0000000A         ;     para fazer estas duas operações em um único ace
                        sso de escrita ao SYSCTL_MOSCCTL_R.
    76 0000000A 4966            LDR              R1, =SYSCTL_MOSCCTL_R ; R1 = SY
@@ -441,7 +441,7 @@ Q
                         configuração de clock.
   144 0000008E         ;    ************
   145 0000008E         ;    Configurar os parâmetros de tempo para as memória
-                       s Flash e EEPROM que 
+                       s Flash e EEPROM que
   146 0000008E         ;    dependem da frequência do clock do sistema. Ver a 
                        Tabela 5-12 do datasheet.
   147 0000008E 494B            LDR              R1, =SYSCTL_MEMTIM0_R ; R1 = SY
@@ -736,7 +736,7 @@ ARM Macro Assembler    Page 12
   240 00000128         
   241 00000128         ; ------------------------------------------------------
                        --------------------------------------------------------
-                       ----------- 
+                       -----------
   242 00000128                 EXPORT           SysTick_Init
   243 00000128                 EXPORT           SysTick_Wait1ms
   244 00000128                 EXPORT           SysTick_Wait1us
@@ -935,7 +935,7 @@ ARM Macro Assembler    Page 15
                        -----------
   338 0000019E 00 00           ALIGN                        ; Garante que o fim
                                                              da seção está a
-                                                            linhado 
+                                                            linhado
   339 000001A0                 END                          ; Fim do arquivo
               400FE0B0 
               400FE07C 
