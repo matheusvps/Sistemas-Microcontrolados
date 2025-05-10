@@ -70,10 +70,10 @@ ARM Macro Assembler    Page 2
 
 
    28 00000000                 EXPORT           LCD_Display ; Permite chamar a 
-                                                            funçãoo Start a p
-                                                            artir de outro arqu
-                                                            ivo. No caso startu
-                                                            p.s
+                                                            função Start a pa
+                                                            rtir de outro arqui
+                                                            vo. No caso startup
+                                                            .s
    29 00000000                 EXPORT           LCD_Init
    30 00000000                 EXPORT           LCD_WriteNumber
    31 00000000         
@@ -224,112 +224,116 @@ ARM Macro Assembler    Page 4
   109 000000A8         ; Envia uma string para o LCD
   110 000000A8         ; Parâmetro de entrada: R0 --> Endereço da string
   111 000000A8         LCD_WriteString
-  112 000000A8 B503            PUSH             {R0, R1, LR} ; Salva o registra
-                                                            dor LR na pilha
-  113 000000AA         Write_Loop
-  114 000000AA F810 1B01       LDRB             R1, [R0], #1 ; Lê o próximo c
+  112 000000A8 B507            PUSH             {R0, R1, R2, LR} ; Salva o regi
+                                                            strador LR na pilha
+                                                            
+  113 000000AA 4602            MOV              R2, R0      ; Copia o endereço
+                                                             da string para R2
+  114 000000AC         Write_Loop
+  115 000000AC F812 1B01       LDRB             R1, [R2], #1 ; Lê o próximo c
                                                             aractere da string
-  115 000000AE 2900            CMP              R1, #0      ; Verifica se é o 
+  116 000000B0 2900            CMP              R1, #0      ; Verifica se é o 
                                                             caractere nulo (fim
                                                              da string)
-  116 000000B0 D003            BEQ              Write_End   ; Se for nulo, term
+  117 000000B2 D003            BEQ              Write_End   ; Se for nulo, term
                                                             ina a função
-  117 000000B2 4608            MOV              R0, R1      ; Move o caractere 
+  118 000000B4 4608            MOV              R0, R1      ; Move o caractere 
                                                             para R0
-  118 000000B4 F7FF FFD2       BL               LCD_Data    ; Envia o caractere
+  119 000000B6 F7FF FFD1       BL               LCD_Data    ; Envia o caractere
                                                              para o LCD
-  119 000000B8 E7F7            B                Write_Loop  ; Continua enviando
+  120 000000BA E7F7            B                Write_Loop  ; Continua enviando
                                                              os próximos carac
                                                             teres
-  120 000000BA         
-  121 000000BA         Write_End
-  122 000000BA E8BD 4003       POP              {R0, R1, LR} ; Restaura o regis
-                                                            trador LR da pilha
-  123 000000BE 4770            BX               LR          ; Retorna da funç�
+  121 000000BC         
+  122 000000BC         Write_End
+  123 000000BC E8BD 4007       POP              {R0, R1, R2, LR} ; Restaura o r
+                                                            egistrador LR da pi
+                                                            lha
+  124 000000C0 4770            BX               LR          ; Retorna da funç�
                                                             �o
-  124 000000C0         
-  125 000000C0         ; ------------------------------------------------------
+  125 000000C2         
+  126 000000C2         ; ------------------------------------------------------
                        -------------------------
-  126 000000C0         ; Função LCD_Display
-  127 000000C0         ; Mostra na tela o valor do passo R5 e o modo R6 (Cresce
+  127 000000C2         ; Função LCD_Display
+  128 000000C2         ; Mostra na tela o valor do passo R5 e o modo R6 (Cresce
                        nte ou Decrescente)
-  128 000000C0         LCD_Display
-  129 000000C0 B501            PUSH             {R0, LR}
-  130 000000C2 F04F 000E       MOV              R0, #0x0E   ; Liga o cursor
-  131 000000C6 F7FF FFB3       BL               LCD_Command ; Envia o comando p
-                                                            ara o LCD
+  129 000000C2         LCD_Display
 
 
 
 ARM Macro Assembler    Page 5 
 
 
-  132 000000CA F04F 0001       MOV              R0, #0x01   ; Limpa o display
-  133 000000CE F7FF FFAF       BL               LCD_Command ; Envia o comando p
+  130 000000C2 B501            PUSH             {R0, LR}
+  131 000000C4 F04F 000E       MOV              R0, #0x0E   ; Liga o cursor
+  132 000000C8 F7FF FFB2       BL               LCD_Command ; Envia o comando p
                                                             ara o LCD
-  134 000000D2 480C            LDR              R0, =String_Passo ; Carrega o e
+  133 000000CC F04F 0001       MOV              R0, #0x01   ; Limpa o display
+  134 000000D0 F7FF FFAE       BL               LCD_Command ; Envia o comando p
+                                                            ara o LCD
+  135 000000D4 480B            LDR              R0, =String_Passo ; Carrega o e
                                                             ndereço da string 
                                                             "Passo: "
-  135 000000D4 F7FF FFE8       BL               LCD_WriteString ; Envia a strin
+  136 000000D6 F7FF FFE7       BL               LCD_WriteString ; Envia a strin
                                                             g para o LCD
-  136 000000D8 4628            MOV              R0, R5      ; Carrega o valor d
+  137 000000DA 4628            MOV              R0, R5      ; Carrega o valor d
                                                             o passo em R0
-  137 000000DA F7FF FFFE       BL               LCD_WriteNumber ; Envia o valor
+  138 000000DC F7FF FFFE       BL               LCD_WriteNumber ; Envia o valor
                                                              do passo para o LC
                                                             D
-  138 000000DE F04F 00C0       MOV              R0, #0xC0   ; Comando para move
+  139 000000E0 F04F 00C0       MOV              R0, #0xC0   ; Comando para move
                                                             r o cursor para a s
                                                             egunda linha
-  139 000000E2 F7FF FFA5       BL               LCD_Command ; Envia o comando p
+  140 000000E4 F7FF FFA4       BL               LCD_Command ; Envia o comando p
                                                             ara o LCD
-  140 000000E6 2E00            CMP              R6, #0      ; Verifica o modo (
+  141 000000E8 2E00            CMP              R6, #0      ; Verifica o modo (
                                                             0 = crescente, 1 = 
                                                             decrescente)
-  141 000000E8 D001            BEQ              Modo_Crescente ; Se for 0, exib
+  142 000000EA D001            BEQ              Modo_Crescente ; Se for 0, exib
                                                             e "Crescente"
-  142 000000EA 4807            LDR              R0, =String_Decrescente ; Caso 
+  143 000000EC 4806            LDR              R0, =String_Decrescente ; Caso 
                                                             contrário, carrega
                                                              "Decrescente"
-  143 000000EC E000            B                Modo_Exibir
-  144 000000EE         
-  145 000000EE         Modo_Crescente
-  146 000000EE 4807            LDR              R0, =String_Crescente ; Carrega
+  144 000000EE E000            B                Modo_Exibir
+  145 000000F0         
+  146 000000F0         Modo_Crescente
+  147 000000F0 4806            LDR              R0, =String_Crescente ; Carrega
                                                              o endereço da str
                                                             ing "Crescente"
-  147 000000F0         
-  148 000000F0         Modo_Exibir
-  149 000000F0 F7FF FFDA       BL               LCD_WriteString ; Envia a strin
+  148 000000F2         
+  149 000000F2         Modo_Exibir
+  150 000000F2 F7FF FFD9       BL               LCD_WriteString ; Envia a strin
                                                             g para o LCD
-  150 000000F4         
-  151 000000F4 F04F 000C       MOV              R0, #0x0C   ; Desliga o cursor
-  152 000000F8 F7FF FF9A       BL               LCD_Command ; Envia o comando p
+  151 000000F6         
+  152 000000F6 F04F 000C       MOV              R0, #0x0C   ; Desliga o cursor
+  153 000000FA F7FF FF99       BL               LCD_Command ; Envia o comando p
                                                             ara o LCD
-  153 000000FC E8BD 4001       POP              {R0, LR}
-  154 00000100 4770            BX               LR          ; Retorna da funç�
+  154 000000FE E8BD 4001       POP              {R0, LR}
+  155 00000102 4770            BX               LR          ; Retorna da funç�
                                                             �o
-  155 00000102         
-  156 00000102         ; ------------------------------------------------------
+  156 00000104         
+  157 00000104         ; ------------------------------------------------------
                        --------------------------------------------------------
                        -----------
-  157 00000102         ; Fim do Arquivo
-  158 00000102         ; ------------------------------------------------------
+  158 00000104         ; Fim do Arquivo
+  159 00000104         ; ------------------------------------------------------
                        --------------------------------------------------------
                        -----------
-  159 00000102 00 00           ALIGN                        ; Garante que o fim
+  160 00000104                 ALIGN                        ; Garante que o fim
                                                              da seção está a
                                                             linhado
-  160 00000104                 END                          ; Fim do arquivo
-              00000000 
-              00000000 
-              00000000 
-Command Line: --debug --xref --diag_suppress=9931,A1950W --cpu=Cortex-M4.fp.sp 
+  161 00000104                 END                          ; Fim do arquivo
 
 
 
 ARM Macro Assembler    Page 6 
 
 
---depend=.\objects\lcd.d -o.\objects\lcd.o -IC:\Users\lucas\AppData\Local\arm\p
+              00000000 
+              00000000 
+              00000000 
+Command Line: --debug --xref --diag_suppress=9931,A1950W --cpu=Cortex-M4.fp.sp 
+--depend=.\objects\lcd.d -o.\objects\lcd.o -IC:\Users\revox\AppData\Local\arm\p
 acks\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C129 --predefine="__EVAL SETA 1" --p
 redefine="__UVISION_VERSION SETA 542" --predefine="TM4C129ENCPDT SETA 1" --list
 =.\listings\lcd.lst lcd.s
@@ -354,7 +358,7 @@ Symbol: String_Crescente
       At line 17 in file lcd.s
    Uses
       At line 18 in file lcd.s
-      At line 146 in file lcd.s
+      At line 147 in file lcd.s
 
 String_Decrescente 00000012
 
@@ -363,7 +367,7 @@ Symbol: String_Decrescente
       At line 20 in file lcd.s
    Uses
       At line 21 in file lcd.s
-      At line 142 in file lcd.s
+      At line 143 in file lcd.s
 
 String_Passo 00000000
 
@@ -372,7 +376,7 @@ Symbol: String_Passo
       At line 14 in file lcd.s
    Uses
       At line 15 in file lcd.s
-      At line 134 in file lcd.s
+      At line 135 in file lcd.s
 
 4 symbols
 
@@ -399,10 +403,10 @@ Symbol: LCD_Command
       At line 47 in file lcd.s
       At line 49 in file lcd.s
       At line 51 in file lcd.s
-      At line 131 in file lcd.s
-      At line 133 in file lcd.s
-      At line 139 in file lcd.s
-      At line 152 in file lcd.s
+      At line 132 in file lcd.s
+      At line 134 in file lcd.s
+      At line 140 in file lcd.s
+      At line 153 in file lcd.s
 
 LCD_Data 0000005C
 
@@ -412,13 +416,13 @@ Symbol: LCD_Data
    Uses
       At line 100 in file lcd.s
       At line 103 in file lcd.s
-      At line 118 in file lcd.s
+      At line 119 in file lcd.s
 
-LCD_Display 000000C0
+LCD_Display 000000C2
 
 Symbol: LCD_Display
    Definitions
-      At line 128 in file lcd.s
+      At line 129 in file lcd.s
    Uses
       At line 28 in file lcd.s
 Comment: LCD_Display used once
@@ -437,7 +441,7 @@ Symbol: LCD_WriteNumber
       At line 95 in file lcd.s
    Uses
       At line 30 in file lcd.s
-      At line 137 in file lcd.s
+      At line 138 in file lcd.s
 
 LCD_WriteString 000000A8
 
@@ -451,40 +455,40 @@ Symbol: LCD_WriteString
    Definitions
       At line 111 in file lcd.s
    Uses
-      At line 135 in file lcd.s
-      At line 149 in file lcd.s
+      At line 136 in file lcd.s
+      At line 150 in file lcd.s
 
-Modo_Crescente 000000EE
+Modo_Crescente 000000F0
 
 Symbol: Modo_Crescente
    Definitions
-      At line 145 in file lcd.s
+      At line 146 in file lcd.s
    Uses
-      At line 141 in file lcd.s
+      At line 142 in file lcd.s
 Comment: Modo_Crescente used once
-Modo_Exibir 000000F0
+Modo_Exibir 000000F2
 
 Symbol: Modo_Exibir
    Definitions
-      At line 148 in file lcd.s
+      At line 149 in file lcd.s
    Uses
-      At line 143 in file lcd.s
+      At line 144 in file lcd.s
 Comment: Modo_Exibir used once
-Write_End 000000BA
+Write_End 000000BC
 
 Symbol: Write_End
    Definitions
-      At line 121 in file lcd.s
+      At line 122 in file lcd.s
    Uses
-      At line 116 in file lcd.s
+      At line 117 in file lcd.s
 Comment: Write_End used once
-Write_Loop 000000AA
+Write_Loop 000000AC
 
 Symbol: Write_Loop
    Definitions
-      At line 113 in file lcd.s
+      At line 114 in file lcd.s
    Uses
-      At line 119 in file lcd.s
+      At line 120 in file lcd.s
 Comment: Write_Loop used once
 11 symbols
 

@@ -25,7 +25,7 @@ String_Decrescente DCB "Decrescente", 0
     AREA |.text|, CODE, READONLY, ALIGN=2
 
     ; Se alguma função do arquivo for chamada em outro arquivo
-    EXPORT LCD_Display ; Permite chamar a funçãoo Start a partir de outro arquivo. No caso startup.s
+    EXPORT LCD_Display ; Permite chamar a função Start a partir de outro arquivo. No caso startup.s
     EXPORT LCD_Init
     EXPORT LCD_WriteNumber
 
@@ -109,18 +109,19 @@ LCD_WriteNumber
 ; Envia uma string para o LCD
 ; Parâmetro de entrada: R0 --> Endereço da string
 LCD_WriteString
-    PUSH {R0, R1, LR}           ; Salva o registrador LR na pilha
+    PUSH {R0, R1, R2, LR}   ; Salva o registrador LR na pilha
+    MOV R2, R0              ; Copia o endereço da string para R2
 Write_Loop
-    LDRB R1, [R0], #1               ; Lê o próximo caractere da string
-    CMP R1, #0                      ; Verifica se é o caractere nulo (fim da string)
-    BEQ Write_End                   ; Se for nulo, termina a função
-    MOV R0, R1                      ; Move o caractere para R0
-    BL LCD_Data                     ; Envia o caractere para o LCD
-    B Write_Loop                    ; Continua enviando os próximos caracteres
+    LDRB R1, [R2], #1       ; Lê o próximo caractere da string
+    CMP R1, #0              ; Verifica se é o caractere nulo (fim da string)
+    BEQ Write_End           ; Se for nulo, termina a função
+    MOV R0, R1              ; Move o caractere para R0
+    BL LCD_Data             ; Envia o caractere para o LCD
+    B Write_Loop            ; Continua enviando os próximos caracteres
 
 Write_End
-    POP {R0, R1, LR}            ; Restaura o registrador LR da pilha
-    BX LR                           ; Retorna da função
+    POP {R0, R1, R2, LR}    ; Restaura o registrador LR da pilha
+    BX LR                   ; Retorna da função
 
 ; -------------------------------------------------------------------------------
 ; Função LCD_Display

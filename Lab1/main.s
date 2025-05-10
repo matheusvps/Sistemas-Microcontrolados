@@ -36,6 +36,7 @@ MS250_IN_US EQU 100000
     IMPORT LCD_Init
     IMPORT LCD_Display
     IMPORT Seg_Display
+    IMPORT Verifica_Passo_Modo
 
 ;-----------------------------------------------------------------
 ; VARIÁVEIS EM REGISTRADORES
@@ -52,7 +53,10 @@ Start
     BL LCD_Init             ; Inicializa LCD
     MOV R5, #1              ; Passo inicial = 1
     MOV R6, #0              ; Modo inicial = crescente
+    MOV R9, R5              ; Passo anterior
+    MOV R10, R6             ; Modo anterior
     LDR R8, =MS250_IN_US    ; Tempo de contagem (100000 x 10us = 1s)
+    BL LCD_Display          ; Exibe as informações iniciais no LCD
 
 MainLoop
     MOV R7, #0              ; Cronômetro
@@ -61,7 +65,7 @@ ShowOnDisplay
     ADD R7, R7, #1          ; Incrementa cronômetro
     CMP R7, R8              ; Verifica se passou 1s
     BLT ShowOnDisplay       ; Enquanto não passou 1s mostra o mesmo número no display de 7 segmentos
-    BL LCD_Display          ; Atualiza display LCD
+    BL Verifica_Passo_Modo  ; Verifica se o passo ou modo mudaram
     CMP R6, #0              ; Verifica o modo 0=crescente 1=decrescente
     BEQ DoIncrement
     SUB R4, R4, R5          ; Modo decrescente
@@ -80,7 +84,7 @@ CheckUnderflow
 
 ContinueLoop
     B MainLoop
-	
+
 ; -------------------------------------------------------------------------------------------------------------------------
 ; Fim do Arquivo
 ; -------------------------------------------------------------------------------------------------------------------------

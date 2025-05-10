@@ -239,10 +239,12 @@ NVIC_ST_RELOAD_R      EQU 0xE000E014
 NVIC_ST_CURRENT_R     EQU 0xE000E018
 
 ; -------------------------------------------------------------------------------------------------------------------------
+    IMPORT LCD_Display
     EXPORT SysTick_Init
     EXPORT SysTick_Wait1ms
     EXPORT SysTick_Wait1us
     EXPORT Extract_Digits
+    EXPORT Verifica_Passo_Modo
 
 ;------------SysTick_Init------------
 ; Configura o sistema para utilizar o SysTick para delays
@@ -322,7 +324,7 @@ SysTick_Wait1us_loop
 SysTick_Wait1us_done
     POP {R4, PC}                        ;return
 
-;------------Extract_Digits------------
+;------------Função Extract_Digits------------
 ; Número em R0 é separado em dígito dezena no R1 e unidade no R2
 Extract_Digits
     PUSH {R3, LR}
@@ -330,6 +332,22 @@ Extract_Digits
     UDIV R1, R0, R3                     ; R1 = R0 / 10 (dezena)
     MLS R2, R3, R1, R0                  ; R2 = R0 - (R1 * 10) (unidade)
     POP {R3, LR}
+    BX LR
+
+;------------Função Verifica_Passo_Modo------------
+; Verifica se o passo (R5) e modo (R6) mudaram, comparando com o passo anterior (R9) e modo anterior (R10)
+Verifica_Passo_Modo
+    PUSH {LR}
+    CMP R5, R9                  ; Verifica se o passo mudou
+    BNE Atualiza_LCD
+    CMP R6, R10                 ; Verifica se o modo mudou
+    BEQ Verifica_Passo_Modo_End
+Atualiza_LCD
+    BL LCD_Display
+Verifica_Passo_Modo_End
+    MOV R9, R5                  ; Passo anterior
+    MOV R10, R6                 ; Modo anterior
+    POP {LR}
     BX LR
 
 ; -------------------------------------------------------------------------------------------------------------------------
