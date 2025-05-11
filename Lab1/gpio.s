@@ -234,9 +234,9 @@ EsperaGPIO
     MOV     R1, #2_00110000                 ; Habilita PB5 e PB4 como digital
     STR     R1, [R0]                        ; Escreve no registrador DEN
 
-    LDR     R0, =GPIO_PORTJ_AHB_DEN_R         ; Endereço do DEN para a porta J
-    MOV     R1, #0x03                         ; Bits 1:0 = 1, habilita PJ0 e PJ1 como digitais
-    STR     R1, [R0]                          ; Escreve no registrador DEN
+    LDR     R0, =GPIO_PORTJ_AHB_DEN_R       ; Endereço do DEN para a porta J
+    MOV     R1, #0x03                       ; Bits 1:0 = 1, habilita PJ0 e PJ1 como digitais
+    STR     R1, [R0]                        ; Escreve no registrador DEN
 
     LDR     R0, =GPIO_PORTK_DEN_R           ; Endereço do DEN para a porta K
     MOV     R1, #2_11111111                 ; Habilita todos os pinos como digitais (PK7–PK0)
@@ -405,45 +405,45 @@ GPIOPortJ_Init
 ; Parâmetro de saída: Não tem
 GPIOPortJ_Handler
     PUSH    {R0,R1,LR}
-    LDR R0, =GPIO_PORTJ_AHB_RIS_R       ; Endereço do RIS para a porta J
-    LDR R1, [R0]                        ; Lê o valor do registrador de interrupção
+    LDR R0, =GPIO_PORTJ_AHB_RIS_R   ; Endereço do RIS para a porta J
+    LDR R1, [R0]                    ; Lê o valor do registrador de interrupção
 
 VerificaJ0
-    TST R1, #0x01                       ; Verifica se PJ0 gerou interrupção (bit 0)
-    BEQ VerificaJ1                      ; Se não, verifica PJ1
+    TST R1, #0x01                   ; Verifica se PJ0 gerou interrupção (bit 0)
+    BEQ VerificaJ1                  ; Se não, verifica PJ1
 
     ; Lógica para PJ0
-    LDR R0, =GPIO_PORTJ_AHB_ICR_R       ; Endereço do ICR para a porta J
-    MOV R1, #0x01                       ; Limpa a interrupção de PJ0
-    STR R1, [R0]                        ; Limpa a interrupção de PJ0
-    ADD R5, R5, #1                      ; Incrementa o passo
-    CMP R5, #10                         ; Verifica se o passo é maior que 10
-    IT GE                               ; Se for maior ou igual a 10, reinicia o passo
-    SUBGE R5, R5, #10                   ; Reinicia o passo para 0
-    B Fim_Ver                           ; Sai da verificação de interrupção
+    LDR R0, =GPIO_PORTJ_AHB_ICR_R   ; Endereço do ICR para a porta J
+    MOV R1, #0x01                   ; Limpa a interrupção de PJ0
+    STR R1, [R0]                    ; Limpa a interrupção de PJ0
+    ADD R5, R5, #1                  ; Incrementa o passo
+    CMP R5, #10                     ; Verifica se o passo é maior que 10
+    IT GE                           ; Se for maior ou igual a 10, reinicia o passo
+    SUBGE R5, R5, #10               ; Reinicia o passo para 0
+    B Fim_Ver                       ; Sai da verificação de interrupção
 
 VerificaJ1
-    LDR R0, =GPIO_PORTJ_AHB_RIS_R       ; Endereço do RIS para a porta J
-    LDR R1, [R0]                        ; Lê o valor do registrador de interrupção
-    TST R1, #0x02                       ; Verifica se PJ1 gerou interrupção (bit 1)
-    BEQ Fim_Ver                         ; Se não, sai da verificação
+    LDR R0, =GPIO_PORTJ_AHB_RIS_R   ; Endereço do RIS para a porta J
+    LDR R1, [R0]                    ; Lê o valor do registrador de interrupção
+    TST R1, #0x02                   ; Verifica se PJ1 gerou interrupção (bit 1)
+    BEQ Fim_Ver                     ; Se não, sai da verificação
 
     ; Lógica para PJ1
-    LDR R0, =GPIO_PORTJ_AHB_ICR_R       ; Endereço do ICR para a porta J
-    MOV R1, #0x02                       ; Limpa a interrupção de PJ1
-    STR R1, [R0]                        ; Limpa a interrupção de PJ1
-    CMP R6, #0                          ; Verifica o modo atual (crescente ou decrescente)
-    ITE EQ                              ; Se for crescente, muda para decrescente, e vice-versa
-    MOVEQ R6, #1                        ; Alterna o modo
-    MOVNE R6, #0                        ; Alterna o modo
+    LDR R0, =GPIO_PORTJ_AHB_ICR_R   ; Endereço do ICR para a porta J
+    MOV R1, #0x02                   ; Limpa a interrupção de PJ1
+    STR R1, [R0]                    ; Limpa a interrupção de PJ1
+    CMP R6, #0                      ; Verifica o modo atual (crescente ou decrescente)
+    ITE EQ                          ; Se for crescente, muda para decrescente, e vice-versa
+    MOVEQ R6, #1                    ; Alterna o modo
+    MOVNE R6, #0                    ; Alterna o modo
 
 Fim_Ver
-    STR R1, [R0]                        ; Salva no registrador
-    POP {R0, R1, LR}                    ; Restaura os registradores R0, R1 e LR da pilha
+    STR R1, [R0]                    ; Salva no registrador
+    POP {R0, R1, LR}
     BX LR
 
 ; -------------------------------------------------------------------------------------------------------------------------
 ; Fim do Arquivo
 ; -------------------------------------------------------------------------------------------------------------------------
-    ALIGN                               ; Garante que o fim da seção está alinhado
-    END                                 ; Fim do arquivo
+    ALIGN                           ; Garante que o fim da seção está alinhado
+    END                             ; Fim do arquivo

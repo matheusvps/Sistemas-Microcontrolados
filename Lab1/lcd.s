@@ -62,11 +62,11 @@ LCD_Command
     BL PortK_Output                ; Envia o sinal de R0 para o PK
     MOV R0, #0x04                  ; Habilita a escrita RS=1, RW=0, EN=1
     BL PortM_Output                ; Envia o sinal para o PM
-    MOV R0, #10
+    MOV R0, #500
     BL SysTick_Wait1us             ; Aguarda 10us (tempo para Enable)
     MOV R0, #0x00                  ; Limpa o sinal de habilitação RS=1, RW=0, EN=0
     BL PortM_Output                ; Envia o sinal para o PM
-    MOV R0, #40
+    MOV R0, #500
     BL SysTick_Wait1us             ; Aguarda 40us (tempo de execução do comando)
     POP {R0, LR}                   ; Restaura o registrador LR da pilha
     BX LR                          ; Retorna da função
@@ -79,11 +79,11 @@ LCD_Data
     BL PortK_Output                ; Envia o sinal de R0 para o PK
     MOV R0, #0x05                  ; Habilita a escrita RS=1, RW=1, EN=1
     BL PortM_Output                ; Envia o sinal para o PM
-    MOV R0, #10
+    MOV R0, #500
     BL SysTick_Wait1us             ; Aguarda 10us (tempo para Enable)
     MOV R0, #0x00                  ; Limpa o sinal de habilitação RS=1, RW=1, EN=0
     BL PortM_Output                ; Envia o sinal para o PM
-    MOV R0, #40
+    MOV R0, #500
     BL SysTick_Wait1us             ; Aguarda 40us (tempo de execução do comando)
     POP {R0, LR}                   ; Restaura o registrador LR da pilha
     BX LR                          ; Retorna da função
@@ -131,6 +131,8 @@ LCD_Display
     MOV R0, #0x0E                   ; Liga o cursor
     BL LCD_Command                  ; Envia o comando para o LCD
     MOV R0, #0x01                   ; Limpa o display
+    BL LCD_Command                  ; Envia o comando para o LCD
+    MOV R0, #0x80                   ; Comando para mover o cursor para a primeira linha
     BL LCD_Command                  ; Envia o comando para o LCD
     LDR R0, =String_Passo           ; Carrega o endereço da string "Passo: "
     BL LCD_WriteString              ; Envia a string para o LCD

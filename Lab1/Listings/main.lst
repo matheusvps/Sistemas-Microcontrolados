@@ -134,16 +134,22 @@ ARM Macro Assembler    Page 2
 ARM Macro Assembler    Page 3 
 
 
-   75 00000048 2C63            CMP              R4, #99
-   76 0000004A DD06            BLE              ContinueLoop
+   75 00000048 2C63            CMP              R4, #99     ; Compara o contado
+                                                            r com 99
+   76 0000004A DD06            BLE              ContinueLoop ; Se é até 99, c
+                                                            ontinua somando
    77 0000004C F04F 0400       MOV              R4, #0      ; Se passou de 99, 
                                                             reinicia contagem
    78 00000050 E003            B                ContinueLoop
    79 00000052         
    80 00000052         CheckUnderflow
-   81 00000052 2C00            CMP              R4, #0
-   82 00000054 DA01            BGE              ContinueLoop
-   83 00000056 F104 0464       ADD              R4, R4, #100
+   81 00000052 2C00            CMP              R4, #0      ; Compara o contado
+                                                            r com 0
+   82 00000054 DA01            BGE              ContinueLoop ; Se não negativo
+                                                            u, continua subtrai
+                                                            nfo
+   83 00000056 F104 0464       ADD              R4, R4, #100 ; Se negativou, so
+                                                            ma 100
    84 0000005A         
    85 0000005A         ContinueLoop
    86 0000005A E7E5            B                MainLoop

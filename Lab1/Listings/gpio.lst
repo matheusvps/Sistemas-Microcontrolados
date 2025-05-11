@@ -1037,15 +1037,13 @@ ARM Macro Assembler    Page 16
   440 00000232         Fim_Ver
   441 00000232 6001            STR              R1, [R0]    ; Salva no registra
                                                             dor
-  442 00000234 E8BD 4003       POP              {R0, R1, LR} ; Restaura os regi
+  442 00000234 E8BD 4003       POP              {R0, R1, LR}
 
 
 
 ARM Macro Assembler    Page 17 
 
 
-                                                            stradores R0, R1 e 
-                                                            LR da pilha
   443 00000238 4770            BX               LR
   444 0000023A         
   445 0000023A         ; ------------------------------------------------------
@@ -1103,14 +1101,14 @@ ARM Macro Assembler    Page 17
               400633FC 
               400653FC 
               400663FC 
+              40060410 
+              40060404 
 
 
 
 ARM Macro Assembler    Page 18 
 
 
-              40060410 
-              40060404 
               40060408 
               4006040C 
               4006041C 

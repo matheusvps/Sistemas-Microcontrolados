@@ -72,15 +72,15 @@ ShowOnDisplay
     B CheckUnderflow
 DoIncrement
     ADD R4, R4, R5          ; Modo crescente
-    CMP R4, #99
-    BLE ContinueLoop
+    CMP R4, #99             ; Compara o contador com 99
+    BLE ContinueLoop        ; Se é até 99, continua somando
     MOV R4, #0              ; Se passou de 99, reinicia contagem
     B ContinueLoop
 
 CheckUnderflow
-    CMP R4, #0
-    BGE ContinueLoop
-    ADD R4, R4, #100
+    CMP R4, #0              ; Compara o contador com 0
+    BGE ContinueLoop        ; Se não negativou, continua subtrainfo
+    ADD R4, R4, #100        ; Se negativou, soma 100
 
 ContinueLoop
     B MainLoop
