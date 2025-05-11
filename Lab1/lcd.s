@@ -63,11 +63,11 @@ LCD_Command
     MOV R0, #0x04                  ; Habilita a escrita RS=1, RW=0, EN=1
     BL PortM_Output                ; Envia o sinal para o PM
     MOV R0, #500
-    BL SysTick_Wait1us             ; Aguarda 10us (tempo para Enable)
+    BL SysTick_Wait1us             ; Aguarda 500us (tempo para Enable)
     MOV R0, #0x00                  ; Limpa o sinal de habilitação RS=1, RW=0, EN=0
     BL PortM_Output                ; Envia o sinal para o PM
     MOV R0, #500
-    BL SysTick_Wait1us             ; Aguarda 40us (tempo de execução do comando)
+    BL SysTick_Wait1us             ; Aguarda 500us (tempo de execução do comando)
     POP {R0, LR}                   ; Restaura o registrador LR da pilha
     BX LR                          ; Retorna da função
 
@@ -80,11 +80,11 @@ LCD_Data
     MOV R0, #0x05                  ; Habilita a escrita RS=1, RW=1, EN=1
     BL PortM_Output                ; Envia o sinal para o PM
     MOV R0, #500
-    BL SysTick_Wait1us             ; Aguarda 10us (tempo para Enable)
+    BL SysTick_Wait1us             ; Aguarda 500us (tempo para Enable)
     MOV R0, #0x00                  ; Limpa o sinal de habilitação RS=1, RW=1, EN=0
     BL PortM_Output                ; Envia o sinal para o PM
     MOV R0, #500
-    BL SysTick_Wait1us             ; Aguarda 40us (tempo de execução do comando)
+    BL SysTick_Wait1us             ; Aguarda 500us (tempo de execução do comando)
     POP {R0, LR}                   ; Restaura o registrador LR da pilha
     BX LR                          ; Retorna da função
 

@@ -136,18 +136,18 @@ ARM Macro Assembler    Page 3
 
                                                             ra o PM
    65 0000003E F44F 70FA       MOV              R0, #500
-   66 00000042 F7FF FFFE       BL               SysTick_Wait1us ; Aguarda 10us 
-                                                            (tempo para Enable)
-                                                            
+   66 00000042 F7FF FFFE       BL               SysTick_Wait1us ; Aguarda 500us
+                                                             (tempo para Enable
+                                                            )
    67 00000046 F04F 0000       MOV              R0, #0x00   ; Limpa o sinal de 
                                                             habilitação RS=1,
                                                              RW=0, EN=0
    68 0000004A F7FF FFFE       BL               PortM_Output ; Envia o sinal pa
                                                             ra o PM
    69 0000004E F44F 70FA       MOV              R0, #500
-   70 00000052 F7FF FFFE       BL               SysTick_Wait1us ; Aguarda 40us 
-                                                            (tempo de execuçã
-                                                            o do comando)
+   70 00000052 F7FF FFFE       BL               SysTick_Wait1us ; Aguarda 500us
+                                                             (tempo de execuç�
+                                                            �o do comando)
    71 00000056 E8BD 4001       POP              {R0, LR}    ; Restaura o regist
                                                             rador LR da pilha
    72 0000005A 4770            BX               LR          ; Retorna da funç�
@@ -167,18 +167,18 @@ ARM Macro Assembler    Page 3
    81 00000066 F7FF FFFE       BL               PortM_Output ; Envia o sinal pa
                                                             ra o PM
    82 0000006A F44F 70FA       MOV              R0, #500
-   83 0000006E F7FF FFFE       BL               SysTick_Wait1us ; Aguarda 10us 
-                                                            (tempo para Enable)
-                                                            
+   83 0000006E F7FF FFFE       BL               SysTick_Wait1us ; Aguarda 500us
+                                                             (tempo para Enable
+                                                            )
    84 00000072 F04F 0000       MOV              R0, #0x00   ; Limpa o sinal de 
                                                             habilitação RS=1,
                                                              RW=1, EN=0
    85 00000076 F7FF FFFE       BL               PortM_Output ; Envia o sinal pa
                                                             ra o PM
    86 0000007A F44F 70FA       MOV              R0, #500
-   87 0000007E F7FF FFFE       BL               SysTick_Wait1us ; Aguarda 40us 
-                                                            (tempo de execuçã
-                                                            o do comando)
+   87 0000007E F7FF FFFE       BL               SysTick_Wait1us ; Aguarda 500us
+                                                             (tempo de execuç�
+                                                            �o do comando)
    88 00000082 E8BD 4001       POP              {R0, LR}    ; Restaura o regist
                                                             rador LR da pilha
    89 00000086 4770            BX               LR          ; Retorna da funç�
