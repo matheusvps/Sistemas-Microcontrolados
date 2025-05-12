@@ -339,14 +339,21 @@ Extract_Digits
 Verifica_Passo_Modo
     PUSH {LR}
     CMP R5, R9                  ; Verifica se o passo mudou
-    BNE Atualiza_LCD
+    BNE Atualiza_Passo
     CMP R6, R10                 ; Verifica se o modo mudou
     BEQ Verifica_Passo_Modo_End
+    CMP R6, R10                 ; Verifica se o modo mudou
+    BNE Atualiza_LCD
+Atualiza_Passo
+    ADD R9, R9, #1              ; Incrementa o passo anterior
+    CMP R9, #10                 ; Verifica se o passo é menor do que 10
+    BLT Atualiza_LCD
+    MOV R9, #1                  ; Reseta o passo
 Atualiza_LCD
+    MOV R5, R9                  ; Passo atual = passo anterior incrementado
+    MOV R10, R6                 ; Modo anterior
     BL LCD_Display
 Verifica_Passo_Modo_End
-    MOV R9, R5                  ; Passo anterior
-    MOV R10, R6                 ; Modo anterior
     POP {LR}
     BX LR
 

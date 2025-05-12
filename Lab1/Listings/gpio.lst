@@ -998,8 +998,8 @@ ARM Macro Assembler    Page 16
   421 00000212 BFA8            IT               GE          ; Se for maior ou i
                                                             gual a 10, reinicia
                                                              o passo
-  422 00000214 3D0A            SUBGE            R5, R5, #10 ; Reinicia o passo 
-                                                            para 0
+  422 00000214 2501            MOVGE            R5, #1      ; Reinicia o passo 
+                                                            para 1
   423 00000216 E00C            B                Fim_Ver     ; Sai da verificaç
                                                             ão de interrupçã
                                                             o
@@ -1116,7 +1116,7 @@ ARM Macro Assembler    Page 18
               E000E430 
               40060414 
 Command Line: --debug --xref --diag_suppress=9931,A1950W --cpu=Cortex-M4.fp.sp 
---depend=.\objects\gpio.d -o.\objects\gpio.o -IC:\Users\revox\AppData\Local\arm
+--depend=.\objects\gpio.d -o.\objects\gpio.o -IC:\Users\lucas\AppData\Local\arm
 \packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C129 --predefine="__EVAL SETA 1" -
 -predefine="__UVISION_VERSION SETA 542" --predefine="TM4C129ENCPDT SETA 1" --li
 st=.\listings\gpio.lst gpio.s

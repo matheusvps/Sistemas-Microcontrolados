@@ -419,7 +419,7 @@ VerificaJ0
     ADD R5, R5, #1                  ; Incrementa o passo
     CMP R5, #10                     ; Verifica se o passo é maior que 10
     IT GE                           ; Se for maior ou igual a 10, reinicia o passo
-    SUBGE R5, R5, #10               ; Reinicia o passo para 0
+    MOVGE R5, #1               		; Reinicia o passo para 1
     B Fim_Ver                       ; Sai da verificação de interrupção
 
 VerificaJ1

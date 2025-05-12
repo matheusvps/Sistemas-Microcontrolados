@@ -172,7 +172,7 @@ ARM Macro Assembler    Page 3
   100 00000078                 END                          ; Fim do arquivo
               00000000 
 Command Line: --debug --xref --diag_suppress=9931,A1950W --cpu=Cortex-M4.fp.sp 
---depend=.\objects\7seg.d -o.\objects\7seg.o -IC:\Users\revox\AppData\Local\arm
+--depend=.\objects\7seg.d -o.\objects\7seg.o -IC:\Users\lucas\AppData\Local\arm
 \packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C129 --predefine="__EVAL SETA 1" -
 -predefine="__UVISION_VERSION SETA 542" --predefine="TM4C129ENCPDT SETA 1" --li
 st=.\listings\7seg.lst 7seg.s

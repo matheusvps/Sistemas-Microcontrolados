@@ -168,7 +168,7 @@ ARM Macro Assembler    Page 3
    67 00000000         ;    passo garante que se a função já tenha sido cham
                        ada antes, o sistema desabilite
    68 00000000         ;    o clock do PLL antes de configurá-lo novamente.
-   69 00000000 496D            LDR              R1, =SYSCTL_RSCLKCFG_R ; R1 = S
+   69 00000000 4971            LDR              R1, =SYSCTL_RSCLKCFG_R ; R1 = S
                                                             YSCTL_RSCLKCFG_R (p
                                                             onteiro)
    70 00000002 6808            LDR              R0, [R1]    ; R0 = [R1] (value)
@@ -187,7 +187,7 @@ ARM Macro Assembler    Page 3
                        WRDN. O datasheet pede
    75 0000000A         ;     para fazer estas duas operações em um único ace
                        sso de escrita ao SYSCTL_MOSCCTL_R.
-   76 0000000A 496C            LDR              R1, =SYSCTL_MOSCCTL_R ; R1 = SY
+   76 0000000A 4970            LDR              R1, =SYSCTL_MOSCCTL_R ; R1 = SY
                                                             SCTL_MOSCCTL_R (poi
                                                             nter)
    77 0000000C 6808            LDR              R0, [R1]    ; R0 = [R1] (value)
@@ -216,7 +216,7 @@ ARM Macro Assembler    Page 4
    81 00000018         ;    Esperar pelo bit MOSCPUPRIS ser setado no registrad
                        or SYSCTL_RIS_R register, indicando
    82 00000018         ;    que o cristal modo MOSC está pronto
-   83 00000018 4969            LDR              R1, =SYSCTL_RIS_R ; R1 = SYSCTL
+   83 00000018 496D            LDR              R1, =SYSCTL_RIS_R ; R1 = SYSCTL
                                                             _RIS_R (pointer)
    84 0000001A         PLL_Init_step3loop
    85 0000001A 6808            LDR              R0, [R1]    ; R0 = [R1] (value)
@@ -230,7 +230,7 @@ ARM Macro Assembler    Page 4
    89 00000022         ; 4) Setar os campos OSCSRC e PLLSRC para 0x3 no registr
                        ador SYSCTL_RSCLKCFG_R
    90 00000022         ;    no offset 0x0B0.
-   91 00000022 4965            LDR              R1, =SYSCTL_RSCLKCFG_R ; R1 = S
+   91 00000022 4969            LDR              R1, =SYSCTL_RSCLKCFG_R ; R1 = S
                                                             YSCTL_RSCLKCFG_R (p
                                                             ointer)
    92 00000024 6808            LDR              R0, [R1]    ; R0 = [R1] (value)
@@ -276,7 +276,7 @@ _MOSC
                        a fonte de clock para deep-sleep
    99 00000038         ;    então programar o campo DSOSCSRC no registrador SY
                        SCTL_DSCLKCFG_R para 0x3.
-  100 00000038 4962            LDR              R1, =SYSCTL_DSCLKCFG_R ; R1 = S
+  100 00000038 4966            LDR              R1, =SYSCTL_DSCLKCFG_R ; R1 = S
                                                             YSCTL_DSCLKCFG_R (p
                                                             ointer)
   101 0000003A 6808            LDR              R0, [R1]    ; R0 = [R1] (value)
@@ -337,12 +337,12 @@ ARM Macro Assembler    Page 6
   117 00000046 04C4B400 
                        SYSCLK  EQU              (FXTAL/(Q+1)/(N+1))*(MINT+MFRAC
 /1024)/(PSYSDIV+1)
-  118 00000046 4960            LDR              R1, =SYSCTL_PLLFREQ0_R ; R1 = S
+  118 00000046 4964            LDR              R1, =SYSCTL_PLLFREQ0_R ; R1 = S
                                                             YSCTL_PLLFREQ0_R (p
                                                             onteiro)
   119 00000048 6808            LDR              R0, [R1]    ; R0 = [R1] (valor)
                                                             
-  120 0000004A 4B60            LDR              R3, =SYSCTL_PLLFREQ0_MFRAC_M ; 
+  120 0000004A 4B64            LDR              R3, =SYSCTL_PLLFREQ0_MFRAC_M ; 
                                                             R3 = SYSCTL_PLLFREQ
                                                             0_MFRAC_M (máscara
                                                             )
@@ -378,7 +378,7 @@ _MINT_S)
                                                             e MINT alteraram ma
                                                             s não estão fixad
                                                             os ainda)
-  128 00000064 495A            LDR              R1, =SYSCTL_PLLFREQ1_R ; R1 = S
+  128 00000064 495E            LDR              R1, =SYSCTL_PLLFREQ1_R ; R1 = S
                                                             YSCTL_PLLFREQ1_R (p
                                                             onteiro)
   129 00000066 6808            LDR              R0, [R1]    ; R0 = [R1] (value)
@@ -413,7 +413,7 @@ S)
                                                             alteraram mas não 
                                                             estão fixados aind
                                                             a)
-  135 0000007A 4953            LDR              R1, =SYSCTL_PLLFREQ0_R ; R1 = S
+  135 0000007A 4957            LDR              R1, =SYSCTL_PLLFREQ0_R ; R1 = S
                                                             YSCTL_PLLFREQ0_R (p
                                                             onteiro)
   136 0000007C 6808            LDR              R0, [R1]    ; R0 = [R1] (valor)
@@ -425,7 +425,7 @@ S)
                                                             r a energia para o 
                                                             PLL)
   138 00000082 6008            STR              R0, [R1]    ; [R1] = R0
-  139 00000084 494C            LDR              R1, =SYSCTL_RSCLKCFG_R ; R1 = S
+  139 00000084 4950            LDR              R1, =SYSCTL_RSCLKCFG_R ; R1 = S
                                                             YSCTL_RSCLKCFG_R (p
                                                             onteiro)
   140 00000086 6808            LDR              R0, [R1]    ; R0 = [R1] (valor)
@@ -444,12 +444,12 @@ Q
                        s Flash e EEPROM que
   146 0000008E         ;    dependem da frequência do clock do sistema. Ver a 
                        Tabela 5-12 do datasheet.
-  147 0000008E 4951            LDR              R1, =SYSCTL_MEMTIM0_R ; R1 = SY
+  147 0000008E 4955            LDR              R1, =SYSCTL_MEMTIM0_R ; R1 = SY
                                                             SCTL_MEMTIM0_R (pon
                                                             teiro)
   148 00000090 6808            LDR              R0, [R1]    ; R0 = [R1] (valor)
                                                             
-  149 00000092 4B51            LDR              R3, =0x03EF03EF ; R3 = 0x03EF03
+  149 00000092 4B55            LDR              R3, =0x03EF03EF ; R3 = 0x03EF03
                                                             EF (máscara)
   150 00000094 EA20 0003       BIC              R0, R0, R3  ; R0 = R0&~0x03EF03
                                                             EF (limpar os campo
@@ -462,10 +462,10 @@ ARM Macro Assembler    Page 8
                                                             s EBCHT, EBCE, EWS,
                                                              FBCHT, FBCE, e FWS
                                                              fields)
-  151 00000098 4A50            LDR              R2, =SYSCLK ; R2 = (FXTAL/(Q+1)
+  151 00000098 4A54            LDR              R2, =SYSCLK ; R2 = (FXTAL/(Q+1)
                                                             /(N+1))*(MINT+MFRAC
                                                             /1024)/(PSYSDIV+1)
-  152 0000009A 4B51            LDR              R3, =120000000 ; R3 = 80,000,00
+  152 0000009A 4B55            LDR              R3, =120000000 ; R3 = 80,000,00
                                                             0 (value)
   153 0000009C 429A            CMP              R2, R3      ; É R2 (SysClk) <=
                                                              R3 (120,000,000 Hz
@@ -484,7 +484,7 @@ ARM Macro Assembler    Page 8
   160 000000A2         PLL_Init_step7fullspeed              ; 100 MHz < SysClk 
                                                             <= 120 MHz: "full s
                                                             peed"
-  161 000000A2 4B50            LDR              R3, =100000000 ; R3 = 100,000,0
+  161 000000A2 4B54            LDR              R3, =100000000 ; R3 = 100,000,0
                                                             00 (valor)
   162 000000A4 429A            CMP              R2, R3      ; É R2 (SysClk) <=
                                                              R3 (100,000,000 Hz
@@ -492,7 +492,7 @@ ARM Macro Assembler    Page 8
   163 000000A6 D902            BLS              PLL_Init_step7veryfast ; se sim
                                                             , pula o práximo t
                                                             este
-  164 000000A8 4B4F            LDR              R3, =0x01850185 ; R3 = 0x018501
+  164 000000A8 4B53            LDR              R3, =0x01850185 ; R3 = 0x018501
                                                             85 (valores desloca
                                                             dos)
   165 000000AA 4418            ADD              R0, R0, R3  ; R0 = R0 + 0x01850
@@ -505,7 +505,7 @@ ARM Macro Assembler    Page 8
   167 000000AE         PLL_Init_step7veryfast               ; 80 MHz < SysClk <
                                                             = 100 MHz: "very fa
                                                             st"
-  168 000000AE 4B4B            LDR              R3, =80000000 ; R3 = 80,000,000
+  168 000000AE 4B4F            LDR              R3, =80000000 ; R3 = 80,000,000
                                                              (valor)
   169 000000B0 429A            CMP              R2, R3      ; É R2 (SysClk) <=
                                                              R3 (80,000,000 Hz)
@@ -513,7 +513,7 @@ ARM Macro Assembler    Page 8
   170 000000B2 D902            BLS              PLL_Init_step7fast ; se sim, pu
                                                             la o próximo teste
                                                             
-  171 000000B4 4B4D            LDR              R3, =0x01440144 ; R3 = 0x014401
+  171 000000B4 4B51            LDR              R3, =0x01440144 ; R3 = 0x014401
                                                             44 (valores desloca
                                                             dos)
   172 000000B6 4418            ADD              R0, R0, R3  ; R0 = R0 + 0x01440
@@ -531,7 +531,7 @@ ARM Macro Assembler    Page 9
                                                             im
   174 000000BA         PLL_Init_step7fast                   ; 60 MHz < SysClk <
                                                             = 80 MHz: "fast"
-  175 000000BA 4B4D            LDR              R3, =60000000 ; R3 = 60,000,000
+  175 000000BA 4B51            LDR              R3, =60000000 ; R3 = 60,000,000
                                                              (valor)
   176 000000BC 429A            CMP              R2, R3      ; É R2 (SysClk) <=
                                                              R3 (60,000,000 Hz)
@@ -539,7 +539,7 @@ ARM Macro Assembler    Page 9
   177 000000BE D902            BLS              PLL_Init_step7medium ; se sim, 
                                                             pula o próximo tes
                                                             te
-  178 000000C0 4B4C            LDR              R3, =0x01030103 ; R3 = 0x010301
+  178 000000C0 4B50            LDR              R3, =0x01030103 ; R3 = 0x010301
                                                             03 (valores desloca
                                                             dos)
   179 000000C2 4418            ADD              R0, R0, R3  ; R0 = R0 + 0x01030
@@ -551,7 +551,7 @@ ARM Macro Assembler    Page 9
                                                             im
   181 000000C6         PLL_Init_step7medium                 ; 40 MHz < SysClk <
                                                             = 60 MHz: "medium"
-  182 000000C6 4B4C            LDR              R3, =40000000 ; R3 = 40,000,000
+  182 000000C6 4B50            LDR              R3, =40000000 ; R3 = 40,000,000
                                                              (valor)
   183 000000C8 429A            CMP              R2, R3      ; É R2 (SysClk) <=
                                                              R3 (40,000,000 Hz)
@@ -569,7 +569,7 @@ ARM Macro Assembler    Page 9
                                                             im
   187 000000D2         PLL_Init_step7slow                   ; 16 MHz < SysClk <
                                                             = 40 MHz: "slow"
-  188 000000D2 4B4A            LDR              R3, =16000000 ; R3 = 16,000,000
+  188 000000D2 4B4E            LDR              R3, =16000000 ; R3 = 16,000,000
                                                              (value)
   189 000000D4 429A            CMP              R2, R3      ; É R2 (SysClk) <=
                                                              R3 (16,000,000 Hz)
@@ -593,7 +593,7 @@ ARM Macro Assembler    Page 10
                                                             im
   193 000000DE         PLL_Init_step7veryslow               ; SysClk == 16 MHz:
                                                              "very slow"
-  194 000000DE 4B47            LDR              R3, =16000000 ; R3 = 16,000,000
+  194 000000DE 4B4B            LDR              R3, =16000000 ; R3 = 16,000,000
                                                              (value)
   195 000000E0 429A            CMP              R2, R3      ; É R2 (SysClk) < 
                                                             R3 (16,000,000 Hz)?
@@ -627,7 +627,7 @@ ARM Macro Assembler    Page 10
                        timeout passou e o travamento
   205 000000F0         ;    falhou, que no caso uma condição de erro existe e
                         esta sequência é abandonada
-  206 000000F0 4943            LDR              R1, =SYSCTL_PLLSTAT_R ; R1 = SY
+  206 000000F0 4947            LDR              R1, =SYSCTL_PLLSTAT_R ; R1 = SY
                                                             SCTL_PLLSTAT_R (poi
                                                             nter)
   207 000000F2 F04F 0200       MOV              R2, #0      ; R2 = 0 (timeout c
@@ -671,7 +671,7 @@ ARM Macro Assembler    Page 11
                                                             ; R3 = SYSCTL_RSCLK
                                                             CFG_PSYSDIV_M (masc
                                                             ara)
-  225 00000112 4929            LDR              R1, =SYSCTL_RSCLKCFG_R ; R1 = S
+  225 00000112 492D            LDR              R1, =SYSCTL_RSCLKCFG_R ; R1 = S
                                                             YSCTL_RSCLKCFG_R (p
                                                             onteiro)
   226 00000114 EA20 0003       BIC              R0, R0, R3  ; R0 = R0&~SYSCTL_R
@@ -751,7 +751,7 @@ ARM Macro Assembler    Page 12
   252 00000128         ; Saída: Nenhum
   253 00000128         ; Modifica: R0, R1
   254 00000128         SysTick_Init
-  255 00000128 4936            LDR              R1, =NVIC_ST_CTRL_R ; R1 = &NVI
+  255 00000128 493A            LDR              R1, =NVIC_ST_CTRL_R ; R1 = &NVI
                                                             C_ST_CTRL_R (pontei
                                                             ro)
   256 0000012A F04F 0000       MOV              R0, #0      ; desabilita Systic
@@ -760,7 +760,7 @@ ARM Macro Assembler    Page 12
   257 0000012E 6008            STR              R0, [R1]    ; escreve no endere
                                                             ço de memória do 
                                                             periférico
-  258 00000130 4935            LDR              R1, =NVIC_ST_RELOAD_R ; R1 = &N
+  258 00000130 4939            LDR              R1, =NVIC_ST_RELOAD_R ; R1 = &N
                                                             VIC_ST_RELOAD_R (po
                                                             inteiro)
   259 00000132 F06F 407F       LDR              R0, =0x00FFFFFF ;    ; valor m�
@@ -770,7 +770,7 @@ ARM Macro Assembler    Page 12
                                                             ço de memória do 
                                                             periférico o NVIC_
                                                             ST_RELOAD_M
-  261 00000138 4934            LDR              R1, =NVIC_ST_CURRENT_R ; R1 = &
+  261 00000138 4938            LDR              R1, =NVIC_ST_CURRENT_R ; R1 = &
                                                             NVIC_ST_CURRENT_R (
                                                             ponteiro)
   262 0000013A F04F 0000       MOV              R0, #0      ; qualquer escrita 
@@ -784,7 +784,7 @@ ARM Macro Assembler    Page 12
 ARM Macro Assembler    Page 13 
 
 
-  264 00000140 4930            LDR              R1, =NVIC_ST_CTRL_R ; habilita 
+  264 00000140 4934            LDR              R1, =NVIC_ST_CTRL_R ; habilita 
                                                             o SysTick com o clo
                                                             ck do core
   265 00000142 F04F 0005       MOV              R0, #0x05   ; ENABLE | CLK_SRC
@@ -803,14 +803,14 @@ ARM Macro Assembler    Page 13
   275 0000014A B40A            PUSH             {R1, R3}    ; Salva os valores 
                                                             de R1 e R3 externos
                                                             
-  276 0000014C 492E            LDR              R1, =NVIC_ST_RELOAD_R ; R1 = &N
+  276 0000014C 4932            LDR              R1, =NVIC_ST_RELOAD_R ; R1 = &N
                                                             VIC_ST_RELOAD_RSUB 
                                                             R0 (ponteiro)
   277 0000014E F1A0 0001       SUB              R0, #1
   278 00000152 6008            STR              R0, [R1]    ; delay-1, número 
                                                             de contagens para e
                                                             sperar
-  279 00000154 492B            LDR              R1, =NVIC_ST_CTRL_R ; R1 = &NVI
+  279 00000154 492F            LDR              R1, =NVIC_ST_CTRL_R ; R1 = &NVI
                                                             C_ST_CTRL_R
   280 00000156         SysTick_Wait_loop
   281 00000156 680B            LDR              R3, [R1]    ; R3 = &NVIC_ST_CTR
@@ -855,7 +855,7 @@ ARM Macro Assembler    Page 14
                                                             EsperasRestantes ==
                                                              0, vai para o fim
   299 00000168         SysTick_Wait1ms_loop
-  300 00000168 4829            LDR              R0, =DELAY1MS ; R0 = DELAY1MS (
+  300 00000168 482D            LDR              R0, =DELAY1MS ; R0 = DELAY1MS (
                                                             número de ticks pa
                                                             ra contar 1ms)
   301 0000016A F7FF FFEE       BL               SysTick_Wait ; chama a rotina p
@@ -935,31 +935,50 @@ ARM Macro Assembler    Page 15
   340 0000019E B500            PUSH             {LR}
   341 000001A0 454D            CMP              R5, R9      ; Verifica se o pas
                                                             so mudou
-  342 000001A2 D101            BNE              Atualiza_LCD
+  342 000001A2 D103            BNE              Atualiza_Passo
   343 000001A4 4556            CMP              R6, R10     ; Verifica se o mod
                                                             o mudou
-  344 000001A6 D001            BEQ              Verifica_Passo_Modo_End
-  345 000001A8         Atualiza_LCD
-  346 000001A8 F7FF FFFE       BL               LCD_Display
-  347 000001AC         Verifica_Passo_Modo_End
-  348 000001AC 46A9            MOV              R9, R5      ; Passo anterior
-  349 000001AE 46B2            MOV              R10, R6     ; Modo anterior
-  350 000001B0 F85D EB04       POP              {LR}
-  351 000001B4 4770            BX               LR
-  352 000001B6         
-  353 000001B6         ; ------------------------------------------------------
+  344 000001A6 D00C            BEQ              Verifica_Passo_Modo_End
+  345 000001A8 4556            CMP              R6, R10     ; Verifica se o mod
+                                                            o mudou
+  346 000001AA D106            BNE              Atualiza_LCD
+  347 000001AC         Atualiza_Passo
+  348 000001AC F109 0901       ADD              R9, R9, #1  ; Incrementa o pass
+                                                            o anterior
+  349 000001B0 F1B9 0F0A       CMP              R9, #10     ; Verifica se o pas
+                                                            so é menor do que 
+                                                            10
+  350 000001B4 DB01            BLT              Atualiza_LCD
+  351 000001B6 F04F 0901       MOV              R9, #1      ; Reseta o passo
+  352 000001BA         Atualiza_LCD
+  353 000001BA 464D            MOV              R5, R9      ; Passo atual = pas
+                                                            so anterior increme
+                                                            ntado
+  354 000001BC 46B2            MOV              R10, R6     ; Modo anterior
+  355 000001BE F7FF FFFE       BL               LCD_Display
+  356 000001C2         Verifica_Passo_Modo_End
+  357 000001C2 F85D EB04       POP              {LR}
+  358 000001C6 4770            BX               LR
+  359 000001C8         
+  360 000001C8         ; ------------------------------------------------------
                        --------------------------------------------------------
                        -----------
-  354 000001B6         ; Fim do Arquivo
-  355 000001B6         ; ------------------------------------------------------
+  361 000001C8         ; Fim do Arquivo
+  362 000001C8         ; ------------------------------------------------------
                        --------------------------------------------------------
                        -----------
-  356 000001B6 00 00           ALIGN                        ; Garante que o fim
+  363 000001C8                 ALIGN                        ; Garante que o fim
                                                              da seção está a
                                                             linhado
-  357 000001B8                 END                          ; Fim do arquivo
+  364 000001C8                 END                          ; Fim do arquivo
               400FE0B0 
               400FE07C 
+
+
+
+ARM Macro Assembler    Page 16 
+
+
               400FE050 
               400FE144 
               400FE160 
@@ -973,12 +992,6 @@ ARM Macro Assembler    Page 15
               01850185 
               01440144 
               03938700 
-
-
-
-ARM Macro Assembler    Page 16 
-
-
               01030103 
               02625A00 
               00F42400 
@@ -988,7 +1001,7 @@ ARM Macro Assembler    Page 16
               E000E018 
               00013880 
 Command Line: --debug --xref --diag_suppress=9931,A1950W --cpu=Cortex-M4.fp.sp 
---depend=.\objects\utils.d -o.\objects\utils.o -IC:\Users\revox\AppData\Local\a
+--depend=.\objects\utils.d -o.\objects\utils.o -IC:\Users\lucas\AppData\Local\a
 rm\packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C129 --predefine="__EVAL SETA 1"
  --predefine="__UVISION_VERSION SETA 542" --predefine="TM4C129ENCPDT SETA 1" --
 list=.\listings\utils.lst utils.s
@@ -1006,14 +1019,23 @@ Symbol: .text
    Uses
       None
 Comment: .text unused
-Atualiza_LCD 000001A8
+Atualiza_LCD 000001BA
 
 Symbol: Atualiza_LCD
    Definitions
-      At line 345 in file utils.s
+      At line 352 in file utils.s
+   Uses
+      At line 346 in file utils.s
+      At line 350 in file utils.s
+
+Atualiza_Passo 000001AC
+
+Symbol: Atualiza_Passo
+   Definitions
+      At line 347 in file utils.s
    Uses
       At line 342 in file utils.s
-Comment: Atualiza_LCD used once
+Comment: Atualiza_Passo used once
 Extract_Digits 0000018A
 
 Symbol: Extract_Digits
@@ -1048,6 +1070,12 @@ Symbol: PLL_Init_step7done
       At line 173 in file utils.s
       At line 180 in file utils.s
       At line 186 in file utils.s
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
       At line 192 in file utils.s
       At line 198 in file utils.s
 
@@ -1057,12 +1085,6 @@ Symbol: PLL_Init_step7extremelyslow
    Definitions
       At line 199 in file utils.s
    Uses
-
-
-
-ARM Macro Assembler    Page 2 Alphabetic symbol ordering
-Relocatable symbols
-
       At line 196 in file utils.s
 Comment: PLL_Init_step7extremelyslow used once
 PLL_Init_step7fast 000000BA
@@ -1113,6 +1135,12 @@ Symbol: PLL_Init_step7veryfast
    Uses
       At line 163 in file utils.s
 Comment: PLL_Init_step7veryfast used once
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Relocatable symbols
+
 PLL_Init_step7veryslow 000000DE
 
 Symbol: PLL_Init_step7veryslow
@@ -1122,12 +1150,6 @@ Symbol: PLL_Init_step7veryslow
       At line 190 in file utils.s
 Comment: PLL_Init_step7veryslow used once
 PLL_Init_step8done 0000010C
-
-
-
-ARM Macro Assembler    Page 3 Alphabetic symbol ordering
-Relocatable symbols
-
 
 Symbol: PLL_Init_step8done
    Definitions
@@ -1178,6 +1200,12 @@ Symbol: SysTick_Wait1ms_done
 Comment: SysTick_Wait1ms_done used once
 SysTick_Wait1ms_loop 00000168
 
+
+
+
+ARM Macro Assembler    Page 4 Alphabetic symbol ordering
+Relocatable symbols
+
 Symbol: SysTick_Wait1ms_loop
    Definitions
       At line 299 in file utils.s
@@ -1187,12 +1215,6 @@ Comment: SysTick_Wait1ms_loop used once
 SysTick_Wait1us 00000176
 
 Symbol: SysTick_Wait1us
-
-
-
-ARM Macro Assembler    Page 4 Alphabetic symbol ordering
-Relocatable symbols
-
    Definitions
       At line 315 in file utils.s
    Uses
@@ -1230,15 +1252,15 @@ Symbol: Verifica_Passo_Modo
    Uses
       At line 247 in file utils.s
 Comment: Verifica_Passo_Modo used once
-Verifica_Passo_Modo_End 000001AC
+Verifica_Passo_Modo_End 000001C2
 
 Symbol: Verifica_Passo_Modo_End
    Definitions
-      At line 347 in file utils.s
+      At line 356 in file utils.s
    Uses
       At line 344 in file utils.s
 Comment: Verifica_Passo_Modo_End used once
-27 symbols
+28 symbols
 
 
 
@@ -1652,7 +1674,7 @@ Symbol: LCD_Display
    Definitions
       At line 242 in file utils.s
    Uses
-      At line 346 in file utils.s
+      At line 355 in file utils.s
 Comment: LCD_Display used once
 1 symbol
-407 symbols in table
+408 symbols in table
