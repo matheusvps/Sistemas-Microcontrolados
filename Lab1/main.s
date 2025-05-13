@@ -74,7 +74,7 @@ DoIncrement
     ADD R4, R4, R5          ; Modo crescente
     CMP R4, #99             ; Compara o contador com 99
     BLE ContinueLoop        ; Se é até 99, continua somando
-    MOV R4, #0              ; Se passou de 99, reinicia contagem
+    SUB R4, R4, #100        ; Se passou de 99, reinicia contagem
     B ContinueLoop
 
 CheckUnderflow

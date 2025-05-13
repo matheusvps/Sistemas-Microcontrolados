@@ -39,6 +39,7 @@ D7SEG_TABELA
     IMPORT SysTick_Wait1ms
     IMPORT PortA_Output
     IMPORT PortB_Output
+    IMPORT PortP_Output
     IMPORT PortQ_Output
     IMPORT Extract_Digits
 
@@ -66,13 +67,13 @@ Seg_Display
     AND R0, R0, #2_11110000     ; Máscara para os 4 bits mais significativos
     BL PortA_Output             ; Envia para o display de 7 segmentos
     MOV R0, #2_00100000
-    BL PortB_Output             ; Envia para o transistor Q
-    MOV R0, #1                  ; 1 ms
-    BL SysTick_Wait1us          ; Espera 10ms
+    BL PortB_Output             ; Envia para o transistor Q3 (PB5)
+    MOV R0, #1                  ; 1 us
+    BL SysTick_Wait1us          ; Espera 1us
     MOV R0, #0
     BL PortB_Output             ; Desliga Q2
-    MOV R0, #1                  ; 1 ms
-    BL SysTick_Wait1us          ; Espera 10ms
+    MOV R0, #1                  ; 1 us
+    BL SysTick_Wait1us          ; Espera 1us
 
 ;--- Exibe a UNIDADE (Q1) ---
     LDRB R0, [R3, R1]           ; R0 = padrão segmentos da dezena
@@ -82,13 +83,29 @@ Seg_Display
     AND R0, R0, #2_11110000     ; Máscara para os 4 bits mais significativos
     BL PortA_Output             ; Envia para o display de 7 segmentos
     MOV R0, #2_00010000
-    BL PortB_Output             ; Envia para o transistor Q3 (dezena)
-    MOV R0, #1                  ; 1 ms
-    BL SysTick_Wait1us          ; Espera 10ms
+    BL PortB_Output             ; Envia para o transistor Q2 (PB4)
+    MOV R0, #1                  ; 1 us
+    BL SysTick_Wait1us          ; Espera 1us
     MOV R0, #0
     BL PortB_Output             ; Desliga Q3
-    MOV R0, #1                  ; 1 ms
-    BL SysTick_Wait1us          ; Espera 10ms
+    MOV R0, #1                  ; 1 us
+    BL SysTick_Wait1us          ; Espera 1us
+
+    ;--- Exibe binário nos LEDs ---
+    ; MOV R0, R4
+    ; AND R0, R0, #2_00001111     ; Máscara para os 4 bits menos significativos
+    ; BL PortQ_Output             ; Envia para os LEDs
+    ; MOV R0, R4
+    ; AND R0, R0, #2_11110000     ; Máscara para os 4 bits mais significativos
+    ; BL PortA_Output             ; Envia para os LEDs
+    ; MOV R0, #2_00100000         ; Liga o transistor Q1 (PP5)
+    ; BL PortP_Output             ; Envia para o transistor Q1 (PB5)
+    ; MOV R0, #1                  ; 1 us
+    ; BL SysTick_Wait1us          ; Espera 1us
+    ; MOV R0, #0
+    ; BL PortP_Output             ; Desliga Q1
+    ; MOV R0, #1                  ; 1 us
+    ; BL SysTick_Wait1us          ; Espera 1us
 
     POP {R0, R1, R2, R3, LR}
     BX LR

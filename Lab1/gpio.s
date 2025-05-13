@@ -100,6 +100,7 @@ NVIC_PRI12_R		  		EQU 0xE000E430
     EXPORT PortB_Output			; Permite chamar PortB_Output de outro arquivo
     EXPORT PortK_Output			; Permite chamar PortK_Output de outro arquivo
     EXPORT PortM_Output			; Permite chamar PortM_Output de outro arquivo
+    EXPORT PortP_Output			; Permite chamar PortP_Output de outro arquivo
     EXPORT PortQ_Output         ; Permite chamar PortQ_Output de outro arquivo
     EXPORT GPIOPortJ_Init       ; Permite chamar GPIO_PortJ_Init de outro arquivo
     EXPORT GPIOPortJ_Handler    ; Permite acesso do sistem ao GPIOPortJ_Handler

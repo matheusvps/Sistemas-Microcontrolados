@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\gpio.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\gpio.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6230001: Last Updated: Mon May 12 20:04:54 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6230001: Last Updated: Mon May 12 21:46:29 2025
 <BR><P>
 <H3>Maximum Stack Usage =          0 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -18,13 +18,14 @@ Functions with no stack information
  <LI><a href="#[77]">PortB_Output</a>
  <LI><a href="#[79]">PortK_Output</a>
  <LI><a href="#[7a]">PortM_Output</a>
+ <LI><a href="#[7c]">PortP_Output</a>
  <LI><a href="#[75]">PortQ_Output</a>
  <LI><a href="#[6f]">GPIOPortJ_Init</a>
  <LI><a href="#[3d]">GPIOPortJ_Handler</a>
  <LI><a href="#[6b]">Start</a>
  <LI><a href="#[6c]">PLL_Init</a>
  <LI><a href="#[6d]">SysTick_Init</a>
- <LI><a href="#[7c]">SysTick_Wait1ms</a>
+ <LI><a href="#[7d]">SysTick_Wait1ms</a>
  <LI><a href="#[78]">SysTick_Wait1us</a>
  <LI><a href="#[74]">Extract_Digits</a>
  <LI><a href="#[73]">Verifica_Passo_Modo</a>
@@ -544,6 +545,8 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Init
 </UL>
 
+<P><STRONG><a name="[7c]"></a>PortP_Output</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, gpio.o(.text), UNUSED)
+
 <P><STRONG><a name="[75]"></a>PortQ_Output</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, gpio.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Seg_Display
 </UL>
@@ -576,7 +579,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Start
 </UL>
 
-<P><STRONG><a name="[7c]"></a>SysTick_Wait1ms</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, utils.o(.text), UNUSED)
+<P><STRONG><a name="[7d]"></a>SysTick_Wait1ms</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, utils.o(.text), UNUSED)
 
 <P><STRONG><a name="[78]"></a>SysTick_Wait1us</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, utils.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Seg_Display

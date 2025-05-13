@@ -138,8 +138,8 @@ ARM Macro Assembler    Page 3
                                                             r com 99
    76 0000004A DD06            BLE              ContinueLoop ; Se é até 99, c
                                                             ontinua somando
-   77 0000004C F04F 0400       MOV              R4, #0      ; Se passou de 99, 
-                                                            reinicia contagem
+   77 0000004C F1A4 0464       SUB              R4, R4, #100 ; Se passou de 99,
+                                                             reinicia contagem
    78 00000050 E003            B                ContinueLoop
    79 00000052         
    80 00000052         CheckUnderflow
