@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "*.dbclient-js": "javascript",
+        "*.log": "log",
+        "*.txt": "log",
+        "stdint.h": "c",
+        "gpio.h": "c"
+    }
+}

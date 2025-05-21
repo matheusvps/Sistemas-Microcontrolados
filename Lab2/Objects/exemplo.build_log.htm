@@ -1,0 +1,68 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: µVision V5.42.0.0
+Copyright (C) 2025 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Lucas iLukS, UTFPR, LIC=----
+ 
+Tool Versions:
+Toolchain:       MDK-Lite  Version: 5.42.0.0
+Toolchain Path:  C:\Keil_v5\ARM\ARMCLANG\Bin
+C Compiler:      ArmClang.exe V6.23
+Assembler:       Armasm.exe V6.23
+Linker/Locator:  ArmLink.exe V6.23
+Library Manager: ArmAr.exe V6.23
+Hex Converter:   FromElf.exe V6.23
+CPU DLL:         SARMCM3.DLL V5.42.0.0
+Dialog DLL:      DCM.DLL V1.17.5.0
+Target DLL:      lmidk-agdi.dll V???
+Dialog DLL:      TCM.DLL V1.56.6.0
+ 
+<h2>Project:</h2>
+C:\Users\lucas\Sistemas-Microcontrolados\Lab2\lab2.uvprojx
+Project File Date:  05/20/2025
+
+<h2>Output:</h2>
+*** Using Compiler 'V6.23', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
+Rebuild target 'Target 1'
+assembling startup.s...
+assembling matricial.s...
+assembling utils.s...
+compiling lcd.c...
+compiling main.c...
+gpio.c(135): error: call to undeclared function 'PortN_Output'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+  135 |         PortN_Output(0x1);
+      |         ^
+gpio.c(135): note: did you mean 'PortJ_Input'?
+gpio.c(58): note: 'PortJ_Input' declared here
+   58 | uint32_t PortJ_Input(void)
+      |          ^
+gpio.c(146): error: conflicting types for 'PortN_Output'
+  146 | void PortN_Output(uint32_t valor)
+      |      ^
+gpio.c(135): note: previous implicit declaration is here
+  135 |         PortN_Output(0x1);
+      |         ^
+2 errors generated.
+compiling gpio.c...
+compiling motor.c...
+".\Objects\exemplo.axf" - 2 Error(s), 0 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.TM4C_DFP.1.1.0.pack
+                Keil::TM4C_DFP@1.1.0
+                Texas Instruments Tiva C Series Device Support and Examples
+
+<h2>Collection of Component include folders:</h2>
+  C:/Users/lucas/AppData/Local/arm/packs/Keil/TM4C_DFP/1.1.0/Device/Include/TM4C129
+
+<h2>Collection of Component Files used:</h2>
+Target not created.
+Build Time Elapsed:  00:00:01
+</pre>
+</body>
+</html>
