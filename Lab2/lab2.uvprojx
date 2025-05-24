@@ -341,7 +341,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath></IncludePath>
+              <IncludePath>.\include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -401,19 +401,24 @@
               <FilePath>.\main.c</FilePath>
             </File>
             <File>
-              <FileName>gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>motor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\motor.c</FilePath>
+              <FileName>matricial.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\matricial.s</FilePath>
             </File>
             <File>
               <FileName>lcd.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\lcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>gpio_config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\gpio_config.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\motor.c</FilePath>
             </File>
           </Files>
         </Group>

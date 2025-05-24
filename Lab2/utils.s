@@ -69,15 +69,15 @@ PLL_Init
     BIC R0, R0, #SYSCTL_RSCLKCFG_USEPLL        ; R0 = R0&~SYSCTL_RSCLKCFG_USEPLL (limpar o bit USEPLL bit para não clockar pelo PLL)
     STR R0, [R1]                               ; [R1] = R0
     ; 2) Ligar o MOSC limpando o bit NOXTAL bit no registrador SYSCTL_MOSCCTL_R.
-    ; 3) Como o modo cristal é requerido, limpar o bit de PWRDN. O datasheet pede 
-	;     para fazer estas duas operações em um único acesso de escrita ao SYSCTL_MOSCCTL_R.
+    ; 3) Como o modo cristal é requerido, limpar o bit de PWRDN. O datasheet pede
+    ;     para fazer estas duas operações em um único acesso de escrita ao SYSCTL_MOSCCTL_R.
     LDR R1, =SYSCTL_MOSCCTL_R                  ; R1 = SYSCTL_MOSCCTL_R (pointer)
     LDR R0, [R1]                               ; R0 = [R1] (value)
     BIC R0, R0, #SYSCTL_MOSCCTL_NOXTAL         ; R0 = R0&~SYSCTL_MOSCCTL_NOXTAL (limpa o bit NOXTAL para usar o cristal externo de 25 MHz)
     BIC R0, R0, #SYSCTL_MOSCCTL_PWRDN          ; R0 = R0&~SYSCTL_MOSCCTL_PWRDN (limpa o bit PWRDN para ligar o oscilador principal)
     STR R0, [R1]                               ; [R1] = R0 (ambas alterações em um único acesso)
     ;    Esperar pelo bit MOSCPUPRIS ser setado no registrador SYSCTL_RIS_R register, indicando
-	;    que o cristal modo MOSC está pronto
+    ;    que o cristal modo MOSC está pronto
     LDR R1, =SYSCTL_RIS_R                      ; R1 = SYSCTL_RIS_R (pointer)
 PLL_Init_step3loop
     LDR R0, [R1]                               ; R0 = [R1] (value)
@@ -105,7 +105,7 @@ PLL_Init_step3loop
     ;    ************
     ;    fVC0 = (fXTAL/(Q + 1)/(N + 1))*(MINT + (MFRAC/1,024))
     ;    fVCO = 480,000,000 Hz (arbitrary, but presumably as small as needed)
-	;    Para uma frequência que não seja um divisor inteiro de 480 MHz, mudar esta seção
+    ;    Para uma frequência que não seja um divisor inteiro de 480 MHz, mudar esta seção
 FXTAL  EQU 25000000                 ; fixa, o cristal está soldado no Launchpad
 Q      EQU        0
 N      EQU        4                 ; escolhido para ser a frequência de referência entre 4 e 30 MHz
@@ -140,8 +140,8 @@ SYSCLK EQU (FXTAL/(Q+1)/(N+1))*(MINT+MFRAC/1024)/(PSYSDIV+1)
     STR R0, [R1]                               ; [R1] = R0
     ; 7) Escrever o registrador SYSCTL_MEMTIM0_R para a nova configuração de clock.
     ;    ************
-    ;    Configurar os parâmetros de tempo para as memórias Flash e EEPROM que 
-	;    dependem da frequência do clock do sistema. Ver a Tabela 5-12 do datasheet.
+    ;    Configurar os parâmetros de tempo para as memórias Flash e EEPROM que
+    ;    dependem da frequência do clock do sistema. Ver a Tabela 5-12 do datasheet.
     LDR R1, =SYSCTL_MEMTIM0_R                  ; R1 = SYSCTL_MEMTIM0_R (ponteiro)
     LDR R0, [R1]                               ; R0 = [R1] (valor)
     LDR R3, =0x03EF03EF                        ; R3 = 0x03EF03EF (máscara)
@@ -212,8 +212,8 @@ PLL_Init_step8loop
     CMP R2, R3                                 ; se (R2 < 0xFFFF), continuar o polling
     BLO PLL_Init_step8loop
     ; O PLL nunca travou ou não está ligado.
-	; Pular o resto da inicialização, levando o sistema ser clockado pelo MOSC,
-	; que é um cristal de 25MHz.
+    ; Pular o resto da inicialização, levando o sistema ser clockado pelo MOSC,
+    ; que é um cristal de 25MHz.
     BX  LR                                     ; return
 PLL_Init_step8done
     ; 9)Escrever o valor do PSYSDIV no registrador SYSCTL_RSCLKCFG_R, setar o bit USEPLL para
@@ -235,46 +235,47 @@ PLL_Init_step8done
 NVIC_ST_CTRL_R        EQU 0xE000E010
 NVIC_ST_RELOAD_R      EQU 0xE000E014
 NVIC_ST_CURRENT_R     EQU 0xE000E018
-; -------------------------------------------------------------------------------------------------------------------------	
+; -------------------------------------------------------------------------------------------------------------------------
         EXPORT  SysTick_Init
-		EXPORT  SysTick_Wait1ms
+        EXPORT  SysTick_Wait1ms
+        EXPORT  SysTick_Wait1us
 ;------------SysTick_Init------------
 ; Configura o sistema para utilizar o SysTick para delays
 ; Entrada: Nenhum
 ; Saída: Nenhum
 ; Modifica: R0, R1
 SysTick_Init
-	LDR R1, =NVIC_ST_CTRL_R			; R1 = &NVIC_ST_CTRL_R (ponteiro)
-	MOV R0, #0 						; desabilita Systick durante a configuração
-	STR R0, [R1]					; escreve no endereço de memória do periférico
-	LDR R1, =NVIC_ST_RELOAD_R 		; R1 = &NVIC_ST_RELOAD_R (pointeiro)
-	LDR R0, =0x00FFFFFF; 			; valor máximo de recarga 2^24 ticks
-	STR R0, [R1] 					; escreve no endereço de memória do periférico o NVIC_ST_RELOAD_M
-	LDR R1, =NVIC_ST_CURRENT_R 		; R1 = &NVIC_ST_CURRENT_R (ponteiro)
-	MOV R0, #0 						; qualquer escrita no endereço NVIC_ST_CURRENT_R o limpa
-	STR R0, [R1] 					; limpa o contador
-	LDR R1, =NVIC_ST_CTRL_R 		; habilita o SysTick com o clock do core
-	MOV R0, #0x05					; ENABLE | CLK_SRC
-	STR R0, [R1] 					; Seta os bits de ENABLE e CLK_SRC na memória
-	BX LR
-	
+    LDR R1, =NVIC_ST_CTRL_R			; R1 = &NVIC_ST_CTRL_R (ponteiro)
+    MOV R0, #0 						; desabilita Systick durante a configuração
+    STR R0, [R1]					; escreve no endereço de memória do periférico
+    LDR R1, =NVIC_ST_RELOAD_R 		; R1 = &NVIC_ST_RELOAD_R (pointeiro)
+    LDR R0, =0x00FFFFFF; 			; valor máximo de recarga 2^24 ticks
+    STR R0, [R1] 					; escreve no endereço de memória do periférico o NVIC_ST_RELOAD_M
+    LDR R1, =NVIC_ST_CURRENT_R 		; R1 = &NVIC_ST_CURRENT_R (ponteiro)
+    MOV R0, #0 						; qualquer escrita no endereço NVIC_ST_CURRENT_R o limpa
+    STR R0, [R1] 					; limpa o contador
+    LDR R1, =NVIC_ST_CTRL_R 		; habilita o SysTick com o clock do core
+    MOV R0, #0x05					; ENABLE | CLK_SRC
+    STR R0, [R1] 					; Seta os bits de ENABLE e CLK_SRC na memória
+    BX LR
+
 ;------------SysTick_Wait------------
 ; Atraso de tempo utilizando processador ocupado
 ; Entrada: R0 -> parâmetro de delay em unidades do clock do core (12.5ns)
 ; Saída: Nenhum
 ; Modifica: R0
 SysTick_Wait
-	PUSH {R1, R3}						; Salva os valores de R1 e R3 externos
-	LDR R1, =NVIC_ST_RELOAD_R 			; R1 = &NVIC_ST_RELOAD_RSUB R0 (ponteiro)
-	SUB R0, #1                          
-	STR R0, [R1] 						; delay-1, número de contagens para esperar
-	LDR R1, =NVIC_ST_CTRL_R 			; R1 = &NVIC_ST_CTRL_R
+    PUSH {R1, R3}						; Salva os valores de R1 e R3 externos
+    LDR R1, =NVIC_ST_RELOAD_R 			; R1 = &NVIC_ST_RELOAD_RSUB R0 (ponteiro)
+    SUB R0, #1
+    STR R0, [R1] 						; delay-1, número de contagens para esperar
+    LDR R1, =NVIC_ST_CTRL_R 			; R1 = &NVIC_ST_CTRL_R
 SysTick_Wait_loop
-	LDR R3, [R1] 						; R3 = &NVIC_ST_CTRL_R (ponteiro)
-	ANDS R3, R3, #0x00010000 			; O bit COUNT está setado? (Bit 16)
-	BEQ SysTick_Wait_loop               ; Se sim permanece no loop
-	POP {R1, R3}						; Restaura
-	BX LR                               ; Se não, retorna
+    LDR R3, [R1] 						; R3 = &NVIC_ST_CTRL_R (ponteiro)
+    ANDS R3, R3, #0x00010000 			; O bit COUNT está setado? (Bit 16)
+    BEQ SysTick_Wait_loop               ; Se sim permanece no loop
+    POP {R1, R3}						; Restaura
+    BX LR                               ; Se não, retorna
 
 ;------------SysTick_Wait1ms------------
 ; tempo de atraso usando processador ocupado. Assume um clock de 80 MHz
@@ -282,43 +283,43 @@ SysTick_Wait_loop
 ; Saída: Não tem
 ; Modifica: R0
 DELAY1MS EQU 80000 ; número de ciclos de clock para contar 1ms (assumindo 80 MHz)
-	               ; 80000 x 12,5 ns = 1 ms
+                   ; 80000 x 12,5 ns = 1 ms
 
 SysTick_Wait1ms
-	PUSH {R4, LR} 						; salva o valor atual de R4 e Link Register
-	MOVS R4, R0 						; R4 = R0  numEsperasRestantes com atualização dos flags
-	BEQ SysTick_Wait1ms_done 			; Se o numEsperasRestantes == 0, vai para o fim
-SysTick_Wait1ms_loop					
-	LDR R0, =DELAY1MS 					; R0 = DELAY1MS (número de ticks para contar 1ms)
-	BL SysTick_Wait 					; chama a rotina para esperar por 1ms
-	SUBS R4, R4, #1 					; R4 = R4 - 1; numEsperasRestantes--
-	BHI SysTick_Wait1ms_loop 			; se (numEsperasRestantes > 0), espera mais 1ms
+    PUSH {R4, LR} 						; salva o valor atual de R4 e Link Register
+    MOVS R4, R0 						; R4 = R0  numEsperasRestantes com atualização dos flags
+    BEQ SysTick_Wait1ms_done 			; Se o numEsperasRestantes == 0, vai para o fim
+SysTick_Wait1ms_loop
+    LDR R0, =DELAY1MS 					; R0 = DELAY1MS (número de ticks para contar 1ms)
+    BL SysTick_Wait 					; chama a rotina para esperar por 1ms
+    SUBS R4, R4, #1 					; R4 = R4 - 1; numEsperasRestantes--
+    BHI SysTick_Wait1ms_loop 			; se (numEsperasRestantes > 0), espera mais 1ms
 SysTick_Wait1ms_done
-	POP {R4, PC}                        ;return
-	
+    POP {R4, PC}                        ;return
+
 ;------------SysTick_Wait1us------------
 ; tempo de atraso usando processador ocupado. Assume um clock de 80 MHz
 ; Entrada: R0 --> Número de vezes para contar 1us.
 ; Saída: Não tem
 ; Modifica: R0
 DELAY1US EQU 80    ; número de ciclos de clock para contar 1ms (assumindo 80 MHz)
-	               ; 80000 x 12,5 ns = 1 ms
+                   ; 80000 x 12,5 ns = 1 ms
 
 SysTick_Wait1us
-	PUSH {R4, LR} 						; salva o valor atual de R4 e Link Register
-	MOVS R4, R0 						; R4 = R0  numEsperasRestantes com atualização dos flags
-	BEQ SysTick_Wait1us_done 			; Se o numEsperasRestantes == 0, vai para o fim
-SysTick_Wait1us_loop					
-	LDR R0, =DELAY1US 					; R0 = DELAY1MS (número de ticks para contar 1ms)
-	BL SysTick_Wait 					; chama a rotina para esperar por 1ms
-	SUBS R4, R4, #1 					; R4 = R4 - 1; numEsperasRestantes--
-	BHI SysTick_Wait1us_loop 			; se (numEsperasRestantes > 0), espera mais 1ms
+    PUSH {R4, LR} 						; salva o valor atual de R4 e Link Register
+    MOVS R4, R0 						; R4 = R0  numEsperasRestantes com atualização dos flags
+    BEQ SysTick_Wait1us_done 			; Se o numEsperasRestantes == 0, vai para o fim
+SysTick_Wait1us_loop
+    LDR R0, =DELAY1US 					; R0 = DELAY1MS (número de ticks para contar 1ms)
+    BL SysTick_Wait 					; chama a rotina para esperar por 1ms
+    SUBS R4, R4, #1 					; R4 = R4 - 1; numEsperasRestantes--
+    BHI SysTick_Wait1us_loop 			; se (numEsperasRestantes > 0), espera mais 1ms
 SysTick_Wait1us_done
-	POP {R4, PC}                        ;return
-	
+    POP {R4, PC}                        ;return
+
 
 ; -------------------------------------------------------------------------------------------------------------------------
 ; Fim do Arquivo
 ; -------------------------------------------------------------------------------------------------------------------------
-    ALIGN                        ;Garante que o fim da seção está alinhada 
+    ALIGN                        ;Garante que o fim da seção está alinhada
     END                          ;Fim do arquivo

@@ -1,0 +1,20 @@
+{
+    "recommendations": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cpptools-extension-pack",
+        "ms-vscode.cpptools-themes",
+        "mutantdino.resourcemonitor",
+        "vscode-icons-team.vscode-icons",
+        "yzhang.markdown-all-in-one",
+        "christian-kohler.path-intellisense",
+        "visualstudioexptteam.vscodeintellicode",
+        "visualstudioexptteam.vscodeintellicode-completions",
+        "visualstudioexptteam.vscodeintellicode-insiders",
+        "visualstudioexptteam.intellicode-api-usage-examples",
+        "donjayamanne.git-extension-pack",
+        "sonarsource.sonarlint-vscode",
+        "emilast.logfilehighlighter",
+        "dan-c-underwood.arm"
+    ]
+}
+

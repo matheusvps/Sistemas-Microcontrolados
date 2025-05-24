@@ -1,9 +1,12 @@
 {
     "files.associations": {
-        "*.dbclient-js": "javascript",
-        "*.log": "log",
-        "*.txt": "log",
-        "stdint.h": "c",
-        "gpio.h": "c"
-    }
+        "*.c": "c",
+        "*.cpp": "cpp",
+        "*.h": "c",
+        "*.hpp": "cpp"
+    },
+    "C_Cpp.intelliSenseEngine": "default",
+    "files.encoding": "utf8",
+    "files.autoGuessEncoding": true,
+    "C_Cpp.default.compilerPath": "c:\\mingw-w64\\x86_64-8.1.0-posix-seh-rt_v6-rev0\\mingw64\\bin\\g++.exe"
 }
