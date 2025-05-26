@@ -15,39 +15,53 @@
 
 void PLL_Init(void);
 void Timer_Init(void);
-void Pisca_leds(void);
-uint32_t TecladoM_Poll(void);
+extern int16_t angle_decoder(uint8_t key_pressed);
+extern void LCD_Display_Number(int32_t number);
+extern uint32_t TecladoM_Poll(void);
+
+// Variável global para armazenar o ângulo atual
+int32_t angulo_atual = 0;
 
 int main(void) {
+    uint32_t tecla;
+    int16_t incremento_angulo;
+    
+    // Inicializações
     PLL_Init();
     SysTick_Init();
     GPIO_Init();
     Timer2_Init();
     LCD_Init();
+    Motor_Init();
 
-    lcd_display_line(0, "Teste do LCD");
-    lcd_display_line(1, "123456789abcd");
+    // Mensagem inicial
+    lcd_display_line(0, "Angulo Atual:");
+    LCD_Display_Number(angulo_atual);
 
     while (1) {
-        TecladoM_Poll();
-    //Se a USR_SW2 estiver pressionada
-        if (PortJ_Input() == 0x1)
-            PortN_Output(0x1);
-    //Se a USR_SW1 estiver pressionada
-        else if (PortJ_Input() == 0x2)
-            PortN_Output(0x2);
-    //Se ambas estiverem pressionadas
-        else if (PortJ_Input() == 0x0)
-            Pisca_leds();
-    //Se nenhuma estiver pressionada
-        else if (PortJ_Input() == 0x3)
-            PortN_Output(0x0);
+        // Lê o teclado matricial
+        tecla = TecladoM_Poll();
+        
+        if(tecla != 0) {
+            // Decodifica o incremento do ângulo baseado na tecla pressionada
+            incremento_angulo = angle_decoder(tecla);
+            
+            // Atualiza o ângulo atual
+            angulo_atual += incremento_angulo;
+            
+            // Garante que o ângulo fique entre 0 e 360 graus
+            if(angulo_atual >= 360) {
+                angulo_atual = angulo_atual % 360;
+            }
+            
+            // Atualiza o display com o novo ângulo
+            LCD_Display_Number(angulo_atual);
+            
+            // Atualiza a posição do motor
+            Motor_Move(angulo_atual);
+            
+            // Pequeno delay para debounce
+            SysTick_Wait1ms(100);
+        }
     }
-}
-
-void Pisca_leds(void) {
-    PortN_Output(0x2);
-    SysTick_Wait1ms(250);
-    PortN_Output(0x1);
-    SysTick_Wait1ms(250);
 }

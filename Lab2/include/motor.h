@@ -2,15 +2,19 @@
 // Desenvolvido para a placa EK-TM4C129EXL
 // Matheus Passos, Lucas Yukio, João Castilho Cardoso
 
-#ifndef MOTOR_H
-    #define MOTOR_H
+#ifndef __MOTOR_H__
+#define __MOTOR_H__
 
-    /**
-     * @brief Gira o motor de passo.
-     * @param graus O número de graus que o motor deve girar.
-     * @param direcao A direção de rotação (1 para horário, -1 para anti-horário).
-     * @param modo O modo de operação (1 para passo completo, 2 para meio passo).
-     */
-    void giraMotor(int graus, int direcao, int modo);
+#include <stdint.h>
 
-#endif
+// Registradores do GPIO Port E
+#define GPIO_PORTE_DATA_R       (*((volatile uint32_t *)0x400243FC))
+#define GPIO_PORTE_DIR_R        (*((volatile uint32_t *)0x40024400))
+#define GPIO_PORTE_DEN_R        (*((volatile uint32_t *)0x4002451C))
+
+// Funções exportadas
+void Motor_Init(void);
+void Motor_Move(int32_t angulo_destino);
+void giraMotor(int graus, int direcao, int modo);
+
+#endif // __MOTOR_H__
