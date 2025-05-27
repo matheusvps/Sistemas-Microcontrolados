@@ -1,2 +1,4 @@
 *.VC.DB*
 *.bak
+Objects/
+Listings/
