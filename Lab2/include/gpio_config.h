@@ -97,16 +97,10 @@
     uint32_t PortL_Input(void);
 
     /**
-     * @brief Saída da porta M (PM0-3).
+     * @brief Saída da porta M (PM0-7).
      * @param valor Valor a ser escrito na porta M.
      */
     void PortM_Output(uint32_t valor);
-
-    /**
-     * @brief Entrada da porta M (PM4-7).
-     * @return Valor lido da porta M.
-     */
-    uint32_t PortM_Input(void);
 
     /**
      * @brief Saída da porta N (PN0-7).

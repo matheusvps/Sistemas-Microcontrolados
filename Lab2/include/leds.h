@@ -16,7 +16,8 @@
         LEDS_180 = 0x0F,
         LEDS_225 = 0x1F,
         LEDS_270 = 0x3F,
-        LEDS_315 = 0x7F
+        LEDS_315 = 0x7F,
+        LEDS_360 = 0xFF
     } LEDS_Degrees; // Representa os ângulos dos LEDS em graus e seus bits.
 
     LEDS_Direction leds_direction(int8_t direction);

@@ -62,7 +62,7 @@ void GPIO_Init(void) {
     GPIO_PORTJ_AHB_DIR_R = 0x00; // PJ0-7 entrada.
     GPIO_PORTK_DIR_R = 0xFF; // PK0-7 saída.
     GPIO_PORTL_DIR_R = 0xF0; // PL0-3 entrada e PL4-7 saída.
-    GPIO_PORTM_DIR_R = 0x0F; // PM0-3 saída e PM4-7 entrada.
+    GPIO_PORTM_DIR_R = 0xFF; // PM0-7 saída.
     GPIO_PORTN_DIR_R = 0xFF; // PN0-7 saída.
     GPIO_PORTP_DIR_R = 0xFF; // PP0-7 saída.
     GPIO_PORTQ_DIR_R = 0xFF; // PQ0-7 saída.
@@ -102,7 +102,6 @@ void GPIO_Init(void) {
     GPIO_PORTE_AHB_PUR_R = 0xF0; // PE4-7.
     GPIO_PORTJ_AHB_PUR_R = 0xFF; // PJ0-7.
     GPIO_PORTL_PUR_R = 0x0F; // PL0-3.
-    GPIO_PORTM_PUR_R = 0xF0; // PM4-7.
 }
 
 /**
@@ -188,19 +187,11 @@ uint32_t PortL_Input(void) {
 }
 
 /**
- * @brief Saída da porta M (PM0-3).
+ * @brief Saída da porta M (PM0-7).
  * @param valor Valor a ser escrito na porta M.
  */
 void PortM_Output(uint32_t valor) {
-    GPIO_PORTM_DATA_R = (GPIO_PORTM_DATA_R & 0xF0) | (valor & 0x0F); // Saídas PM0-3
-}
-
-/**
- * @brief Entrada da porta M (PM4-7).
- * @return Valor lido da porta M.
- */
-uint32_t PortM_Input(void) {
-    return GPIO_PORTM_DATA_R & 0xF0; // Entradas PM4-7.
+    GPIO_PORTM_DATA_R = valor; // Saídas PM0-7
 }
 
 /**

@@ -68,8 +68,14 @@ void lcd_display_line(uint8_t line, const char *str) {
     static char last_str1[17] = {'\0'};
 
     if (line == 0) {
+        if (strcmp(last_str0, str) == 0) {
+            return; // Não atualiza se a string for a mesma
+        }
         strncpy(last_str0, str, 16);
     } else {
+        if (strcmp(last_str1, str) == 0) {
+            return; // Não atualiza se a string for a mesma
+        }
         strncpy(last_str1, str, 16);
     }
 

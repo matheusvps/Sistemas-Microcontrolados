@@ -9,7 +9,7 @@
  * @param angle O ângulo em graus (0 a 360).
  */
 LEDS_Degrees leds_angle(uint16_t angle) {
-    if (angle >= 360) {
+    if (angle > 360) {
         angle %= 360;
     }
     if (angle >= 0 && angle < 45) {
@@ -26,8 +26,10 @@ LEDS_Degrees leds_angle(uint16_t angle) {
         return LEDS_225;
     } else if (angle >= 270 && angle < 315) {
         return LEDS_270;
-    } else {
+    } else if (angle >= 315 && angle < 360) {
         return LEDS_315;
+    } else {
+        return LEDS_360;
     }
 }
 
@@ -60,7 +62,7 @@ uint8_t reverse_bits(uint8_t b) {
 void leds_on(uint16_t angle, int8_t direction) {
     LEDS_Degrees leds_degrees = leds_angle(angle);
     switch (leds_direction(direction)) {
-        case LEDS_COUNTERCLOCKWISE:
+        case LEDS_CLOCKWISE:
             switch (leds_degrees) {
                 case LEDS_0:
                     PortQ_Output(LEDS_0 & 0x0F);
@@ -94,10 +96,16 @@ void leds_on(uint16_t angle, int8_t direction) {
                     PortQ_Output(LEDS_315 & 0x0F);
                     PortA_Output((LEDS_315 & ~(1 << 3)) | (((LEDS_315 >> 2) & 1) << 3) & 0xF8);
                     break;
+                case LEDS_360:
+                    PortQ_Output(LEDS_360 & 0x0F);
+                    PortA_Output((LEDS_360 & ~(1 << 3)) | (((LEDS_360 >> 2) & 1) << 3) & 0xF8);
+                    break;
+                default:
+                    break;
             }
             break;
 
-        case LEDS_CLOCKWISE:
+        case LEDS_COUNTERCLOCKWISE:
             switch (leds_degrees) {
                 case LEDS_0:
                     PortQ_Output(reverse_bits(LEDS_0) & 0x0F);
@@ -130,6 +138,12 @@ void leds_on(uint16_t angle, int8_t direction) {
                 case LEDS_315:
                     PortQ_Output(reverse_bits(LEDS_315) & 0x0F);
                     PortA_Output((reverse_bits(LEDS_315) & ~(1 << 3)) | (((reverse_bits(LEDS_315) >> 2) & 1) << 3) & 0xF8);
+                    break;
+                case LEDS_360:
+                    PortQ_Output(reverse_bits(LEDS_360) & 0x0F);
+                    PortA_Output((reverse_bits(LEDS_360) & ~(1 << 3)) | (((reverse_bits(LEDS_360) >> 2) & 1) << 3) & 0xF8);
+                    break;
+                default:
                     break;
             }
             break;

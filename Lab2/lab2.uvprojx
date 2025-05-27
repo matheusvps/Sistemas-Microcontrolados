@@ -426,9 +426,9 @@
               <FilePath>.\interface.c</FilePath>
             </File>
             <File>
-              <FileName>matricial.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>.\matricial.s</FilePath>
+              <FileName>matricial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\matricial.c</FilePath>
             </File>
           </Files>
         </Group>

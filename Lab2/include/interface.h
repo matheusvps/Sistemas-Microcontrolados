@@ -1,5 +1,5 @@
-#ifndef __INTERFACE_H__
-#define __INTERFACE_H__
+#ifndef INTERFACE_H
+#define INTERFACE_H
 
 /**
  * @brief Processa o estado atual da interface
@@ -7,4 +7,4 @@
  */
 int processar_interface(void);
 
-#endif // __INTERFACE_H__ 
+#endif // INTERFACE_H
