@@ -21,14 +21,26 @@
         GPIO_PORTL = 0x0400, // Bit 10.
         GPIO_PORTM = 0x0800, // Bit 11.
         GPIO_PORTN = 0x1000, // Bit 12.
-        GPIO_PORTP = 0x4000, // Bit 13.
-        GPIO_PORTQ = 0x8000  // Bit 14.
+        GPIO_PORTP = 0x2000, // Bit 13.
+        GPIO_PORTQ = 0x4000  // Bit 14.
     } GPIO_Port; // Enum for GPIO ports.
 
     /**
      * @brief Inicializa as portas do GPIO.
      */
     void GPIO_Init(void);
+
+    /**
+     * @brief Saída da porta A (PA0-7).
+     * @param valor Valor a ser escrito na porta A.
+     */
+    void PortA_Output(uint32_t valor);
+
+    /**
+     * @brief Saída da porta B (PB0-1 e PB4-7).
+     * @param valor Valor a ser escrito na porta B.
+     */
+    void PortB_Output(uint32_t valor);
 
     /**
      * @brief Saída da porta D (PD4-7).
@@ -101,6 +113,18 @@
      * @param valor Valor a ser escrito na porta N.
      */
     void PortN_Output(uint32_t valor);
+
+    /**
+     * @brief Saída da porta P (PP0-7).
+     * @param valor Valor a ser escrito na porta P.
+     */
+    void PortP_Output(uint32_t valor);
+
+    /**
+     * @brief Saída da porta Q (PQ0-7).
+     * @param valor Valor a ser escrito na porta Q.
+     */
+    void PortQ_Output(uint32_t valor);
 
     /**
      * @brief Inicializa o Timer 2 para uso com interrupção periódica.

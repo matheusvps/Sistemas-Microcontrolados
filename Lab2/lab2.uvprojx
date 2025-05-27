@@ -401,11 +401,6 @@
               <FilePath>.\main.c</FilePath>
             </File>
             <File>
-              <FileName>matricial.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>.\matricial.s</FilePath>
-            </File>
-            <File>
               <FileName>lcd.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\lcd.c</FilePath>
@@ -419,6 +414,11 @@
               <FileName>motor.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>leds.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\leds.c</FilePath>
             </File>
           </Files>
         </Group>
