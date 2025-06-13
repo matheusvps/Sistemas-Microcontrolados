@@ -24,10 +24,7 @@ int main(void) {
     Timer2_Init();
     LCD_Init();
     lcd_display_line(0, "Digite o angulo:");
-    // leds_on(315,1);
-    // lcd_display_line(0, "Ligou");
-    // lcd_display_line(1, "Teste123");
-
+    
     while (1) {
         processar_interface();
     }

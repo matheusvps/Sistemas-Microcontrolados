@@ -1,13 +1,16 @@
+// interface.h
+// Desenvolvido para a placa EK-TM4C129EXL
+// Matheus Passos, Lucas Yukio, João Castilho Cardoso
+
 #include "interface.h"
 
+// C
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-#include "lcd.h"
-#include "leds.h"
-#include "motor.h"
-#include "matricial.h"
+// Lab3
+#include "servomotor.h"
 #include "systick.h"
 #include "gpio_config.h"
 

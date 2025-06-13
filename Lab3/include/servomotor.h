@@ -1,9 +1,9 @@
-// motor.h
+// servomotor.h
 // Desenvolvido para a placa EK-TM4C129EXL
 // Matheus Passos, Lucas Yukio, João Castilho Cardoso
 
-#ifndef MOTOR_H
-    #define MOTOR_H
+#ifndef SERVOMOTOR_H
+    #define SERVOMOTOR_H
 
     /**
      * @brief Atualiza o display durante o giro do motor

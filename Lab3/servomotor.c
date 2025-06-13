@@ -1,17 +1,17 @@
-// motor.c
+// servomotor.c
 // Desenvolvido para a placa EK-TM4C129EXL
 // Matheus Passos, Lucas Yukio, João Castilho Cardoso
 
-#include "motor.h"
+#include "servomotor.h"
 
+// C
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+// Lab3
 #include "gpio_config.h"
-#include "lcd.h"
-#include "leds.h"
 #include "systick.h"
 
 #define PASSOS_POR_VOLTA 512 // Número de passos por volta do motor de passo.
