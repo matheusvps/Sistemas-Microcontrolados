@@ -7,8 +7,9 @@
 
 // Lab3
 #include "gpio_config.h"
-#include "systick.h"
 #include "interface.h"
+#include "systick.h"
+#include "uart.h"
 
 void PLL_Init(void);
 void Timer_Init(void);
@@ -17,8 +18,8 @@ int main(void) {
     PLL_Init();
     SysTick_Init();
     GPIO_Init();
+    UART0_Initi();
     Timer2_Init();
-    lcd_display_line(0, "Digite o angulo:");
 
     while (1) {
         processar_interface();
