@@ -56,9 +56,9 @@ volatile clock_t uart0_last_char_time = 0; // Último tempo em que um caractere 
 extern volatile clock_t millis; // Variável global para o tempo em milissegundos
 
 // Configurações padrão do UART0
-static const uart0_baud_rate_t UART0_BAUD_RATE = UART0_BAUD_RATE_115200; // Taxa de baud padrão
-static const uart0_parity_t UART0_PARITY = UART0_PARITY_EVEN; // Paridade padrão
-static const uart0_stopbits_t UART0_STOPBITS = UART0_STOPBITS_1; // Stop bits padrão
+static const uart0_baud_rate_t UART0_BAUD_RATE = UART0_BAUD_RATE_19200; // Taxa de baud padrão
+static const uart0_parity_t UART0_PARITY = UART0_PARITY_ODD; // Paridade padrão
+static const uart0_stopbits_t UART0_STOPBITS = UART0_STOPBITS_2; // Stop bits padrão
 
 /**
  * @brief Inicializa o UART0 para comunicação serial.
