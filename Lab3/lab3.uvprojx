@@ -401,34 +401,34 @@
               <FilePath>.\main.c</FilePath>
             </File>
             <File>
-              <FileName>lcd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\lcd.c</FilePath>
-            </File>
-            <File>
               <FileName>gpio_config.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\gpio_config.c</FilePath>
             </File>
             <File>
-              <FileName>motor.c</FileName>
+              <FileName>adc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\motor.c</FilePath>
+              <FilePath>.\adc.c</FilePath>
             </File>
             <File>
-              <FileName>leds.c</FileName>
+              <FileName>pwm.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\leds.c</FilePath>
+              <FilePath>.\pwm.c</FilePath>
             </File>
             <File>
-              <FileName>interface.c</FileName>
+              <FileName>servomotor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\interface.c</FilePath>
+              <FilePath>.\servomotor.c</FilePath>
             </File>
             <File>
-              <FileName>matricial.c</FileName>
+              <FileName>systick.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\matricial.c</FilePath>
+              <FilePath>.\systick.c</FilePath>
+            </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\uart.c</FilePath>
             </File>
           </Files>
         </Group>

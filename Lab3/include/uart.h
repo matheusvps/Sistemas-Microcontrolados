@@ -5,6 +5,11 @@
 #ifndef UART_H
     #define UART_H
 
+    // C
+    #include <stdbool.h>
+    #include <stddef.h>
+    #include <stdint.h>
+
     /**
      * @brief Inicializa o UART0 para comunicação serial.
      */
@@ -28,5 +33,10 @@
      * @param str Ponteiro para a string a ser enviada.
      */
     void uart0_write(const char* str);
+
+    /**
+     * @brief Limpa o buffer do UART0.
+     */
+    void uart0_clear_rx_buffer(void);
 
 #endif // UART_H

@@ -5,6 +5,11 @@
 #ifndef SYSTICK_H
     #define SYSTICK_H
 
+    // C
+    #include <stdint.h>
+
+    extern volatile uint32_t millis; // Variável global para o tempo em milissegundos
+
     /**
      * @brief Inicializa o SysTick.
      */
@@ -21,5 +26,15 @@
      * @param delay O número de microssegundos a esperar.
      */
     void SysTick_Wait1us(uint32_t delay);
+
+    /**
+     * @brief Inicializa o contador millis.
+     */
+    void Timer1A_Init(void);
+
+    /**
+     * @brief Interrupção do millis.
+     */
+    void Timer1A_Handler(void);
 
 #endif // SYSTICK_H

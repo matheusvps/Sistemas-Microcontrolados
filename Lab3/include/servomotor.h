@@ -5,20 +5,29 @@
 #ifndef SERVOMOTOR_H
     #define SERVOMOTOR_H
 
-    /**
-     * @brief Atualiza o display durante o giro do motor
-     * @param angulo_atual Ângulo atual do motor
-     * @param direcao Direção de rotação (1 para horário, -1 para anti-horário)
-     * @param velocidade Velocidade de rotação (1 para passo completo, 2 para meio passo)
-     */
-    void atualizar_display_giro(int angulo_atual, int direcao, int velocidade);
+    // C
+    #include <stdint.h>
 
     /**
-     * @brief Gira o motor de passo.
-     * @param graus O número de graus que o motor deve girar.
-     * @param direcao A direção de rotação (1 para horário, -1 para anti-horário).
-     * @param modo O modo de operação (1 para passo completo, 2 para meio passo).
+     * @brief Inicializa o servomotor.
      */
-    void giraMotor(int graus, int direcao, int modo);
+    void servomotor_init(void);
+
+    /**
+     * @brief Define o ângulo do servomotor.
+     * @param angle Ângulo desejado em graus, entre -90 e +90.
+     */
+    void servomotor_set_angle(int angle);
+
+    /**
+     * @brief Define o ângulo do servomotor com base no valor do ADC.
+     * @param adc_val Valor lido do ADC (0-4095).
+     */
+    void servomotor_set_angle_by_adc(uint32_t adc_val);
+
+    /**
+     * @brief Obtém o ângulo atual do servomotor.
+     */
+    int servomotor_get_angle(void);
 
 #endif

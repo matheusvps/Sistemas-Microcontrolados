@@ -249,7 +249,7 @@ SysTick_Init
     MOV R0, #0 						; desabilita Systick durante a configuração
     STR R0, [R1]					; escreve no endereço de memória do periférico
     LDR R1, =NVIC_ST_RELOAD_R 		; R1 = &NVIC_ST_RELOAD_R (pointeiro)
-    LDR R0, =0x00FFFFFF; 			; valor máximo de recarga 2^24 ticks
+    LDR R0, =0x00FFFFFF; 			; valor m?ximo de recarga 2^24 ticks
     STR R0, [R1] 					; escreve no endereço de memória do periférico o NVIC_ST_RELOAD_M
     LDR R1, =NVIC_ST_CURRENT_R 		; R1 = &NVIC_ST_CURRENT_R (ponteiro)
     MOV R0, #0 						; qualquer escrita no endereço NVIC_ST_CURRENT_R o limpa

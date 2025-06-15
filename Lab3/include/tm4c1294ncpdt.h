@@ -40,6 +40,9 @@
 #ifndef __TM4C1294NCPDT_H__
 #define __TM4C1294NCPDT_H__
 
+// C
+#include <stdint.h>
+
 //*****************************************************************************
 //
 // Interrupt assignments
